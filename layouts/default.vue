@@ -25,15 +25,15 @@ export default defineComponent({
 
 .todo-edit-task-input,
 .todo-add-task-input {
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   max-width: 300px;
 }
 
 .todo-update-task,
 .todo-add-task {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .todo-task {

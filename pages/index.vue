@@ -140,17 +140,17 @@ export default defineComponent({
     },
     /**
      * Function to update a single todo
-     * @argument {number} index - index of element to update in todos array
-     * @argument {number} id - id of todo obtained from API
+     * @argument {number} _index - index of element to update in todos array
+     * @argument {number} _id - id of todo obtained from API
      * @todo Complete this function.
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(index, id) {},
+    updateTask(_index, _id) {},
     /**
      * toggle visibility of input and buttons for a single todo
      * @argument {number} index - index of element to toggle
-     * @todo add in bindings in dom so that 'hideme' class is dynamic
+     * @todo add in bindings in dom so that 'hideme' class is dynamic or use conditional rendering
      * @hint read about class bindings in vue
      */
     editTask(index) {
@@ -158,13 +158,13 @@ export default defineComponent({
     },
     /**
      * Function to delete a single todo
-     * @argument {number} index - index of element to update in todos array
-     * @argument {number} id - id of todo obtained from API
+     * @argument {number} _index - index of element to update in todos array
+     * @argument {number} _id - id of todo obtained from API
      * @todo Complete this function.
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(index, id) {},
+    deleteTask(_index, _id) {},
     /**
      * function to add in a single new todo to the list
      * @todo Complete this function.
@@ -175,5 +175,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style></style>
