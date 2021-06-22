@@ -68,7 +68,14 @@ We have also created a backend server containing the API endpoints required for 
 You are already familiar with API from last task if not find more details at [Task-2-Web](https://github.com/COPS-IITBHU/csoc-2021-task-2-web/blob/main/README.md#api-usage)
 
 ## Tasks
-You would notice that the application is not functional completely. So, your task is to make it completely functional. You would be working in `main.js`, `init.js`, `auth_required.js` and `no_auth_required.js` mainly. There are several todos mentioned in these files. You have to complete those.
+You would notice that the application is not functional completely. So, your task is to make it completely functional. You would be working in :
+- [Landing](./pages/index.vue)
+- [Register](./pages/register/index.vue)
+- [Login](./pages/login/index.vue)
+- [Add Task](./components/addTask.vue)
+- [Auth Middleware](./middleware/auth.ts)
+
+There are several todos mentioned in these files. You have to complete those.
 
 In particular you have to
 
