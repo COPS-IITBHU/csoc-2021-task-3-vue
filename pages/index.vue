@@ -1,6 +1,6 @@
 <template>
   <main class="max-w-lg mx-auto px-6">
-    <add-task @newTask="fetchTask" />
+    <add-task @newTask="getTasks" />
     <transition>
       <span v-if="loading">Fetching Tasks....</span>
       <ul v-else class="flex-col mt-9 mx-auto">
@@ -134,6 +134,7 @@ export default defineComponent({
     async getTasks() {
       /***
        * @todo Fetch the tasks created by the user and display them.
+       * @todo also the function to display a single new task added
        * @hints use store and set loading true
        * @caution you have to assign new value to todos for it to update
        */
@@ -165,13 +166,6 @@ export default defineComponent({
      * @todo 2. Remove the task from the dom.
      */
     deleteTask(_index, _id) {},
-    /**
-     * function to add in a single new todo to the list
-     * @todo Complete this function.
-     * @todo parent received an event from child that a new todo was added
-     * @todo add the todo to dom
-     */
-    fetchTask() {},
   },
 })
 </script>
