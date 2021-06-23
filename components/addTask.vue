@@ -47,7 +47,6 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 import axios from 'axios'
 
-
 export default defineComponent({
   emits: ['newTask'],
   methods: {
@@ -60,6 +59,7 @@ export default defineComponent({
        */
 
       let newTask = id("addTask").value.trim();
+      id("addTask").value = "";
       console.log(newTask)
       if(!newTask || newTask == "") {
         return
@@ -75,14 +75,15 @@ export default defineComponent({
             title: newTask
         },
     }).catch(function(err) {
-        //displayErrorToast("something went wrong")  
+       // displayErrorToast("something went wrong")  
+        
         console.log(err)
     })
 
 
-      
 
-      this.$emit('newTask')
+
+    this.$emit('newTask')
 
     },
   },

@@ -3,9 +3,10 @@
     <add-task @newTask="getTasks" />
     <transition>
       <span v-if="loading">Fetching Tasks....</span>
-      <ul v-else class="flex-col mt-9 mx-auto">
+      <ul v-else class="flex-col mt-9 mx-auto" id="taskList">
         <li
           v-for="(todo, index) in todos"
+          :id="'todo' + todo.id"
           :key="todo.id"
           class="
             border
@@ -134,6 +135,23 @@ export default defineComponent({
   },
   methods: {
 
+    addNewTask(){
+      let latest;
+      axios({
+        headers: {
+            Authorization: 'Token ' + localStorage.getItem('token'),
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/',
+        method: 'get',
+      }).then(function({data, status}) { 
+       latest = data[data.length - 1]
+       console.log(latest)
+      })
+      console.log(this.todos)
+      this.todos.push(latest)
+
+    },
+
 
     async getTasks() {
       console.log("clicked")
@@ -143,7 +161,7 @@ export default defineComponent({
        * @hints use store and set loading true
        * @caution you have to assign new value to todos for it to update
        */
-
+      this.loading = true;
       let myTodos = []
       this.todos = []
         
@@ -156,7 +174,7 @@ export default defineComponent({
       }).then(function({data, status}) { 
         if(data.length){
           data.forEach(function(task){
-            console.log(task);
+        //    console.log(task);
             myTodos.push(task)
           })
         }  
@@ -165,8 +183,8 @@ export default defineComponent({
     myTodos.forEach(element => {
       this.todos.push(element)
     });
-
-    console.log(this.todos)
+  this.loading = false;
+   // console.log(this.todos)
     },
 
 
@@ -190,7 +208,7 @@ export default defineComponent({
      */
     editTask(index) {
       this.todos[index].editing = !this.todos[index].editing;
-      console.log("edit")
+      console.log("edit");
     },
     /**
      * Function to delete a single todo
@@ -200,7 +218,36 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(_index, _id) {},
+    deleteTask(_index, _id) {
+          axios({
+        url: 'https://todo-app-csoc.herokuapp.com/' + "todo/"+_id+"/",
+        headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+        },
+        method: "delete",
+
+    }).then(function({data, status}) {
+       console.log("deleted")
+       let toBeDel = id("todo" + _id);
+       toBeDel.parentNode.removeChild(toBeDel);
+    }).catch(function(err) {
+      //displayErrorToast("something went wrong");
+      console.log(err)
+    })
+
+    },
   },
 })
+
+function id(params) {
+  return document.getElementById(params);
+}
+
 </script>
+
+<style scoped>
+  body{
+    background-color: rgb(66,66,66);
+    color: aliceblue;
+  }
+</style>
