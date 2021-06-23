@@ -248,6 +248,8 @@ export default defineComponent({
       id(todoId).classList.remove("hideme");
       id("title" + todoId).classList.add("hideme");
       id("buttons"+todoId).classList.add("hideme");
+
+      id(todoId).value = id("title" + todoId).innerText;
     },
 
 
