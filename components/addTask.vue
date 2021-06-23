@@ -45,6 +45,8 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+import axios from 'axios'
+
 
 export default defineComponent({
   emits: ['newTask'],
@@ -57,10 +59,30 @@ export default defineComponent({
        * @hint use emit to make a event that parent can observe
        */
 
-      console.log("add")
-      console.log(this.$parent)
-      let create = id("addTask").value
-      if(create) console.log(create)
+      let newTask = id("addTask").value.trim();
+      console.log(newTask)
+      if(!newTask || newTask == "") {
+        return
+      }
+
+      axios({
+        headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + "todo/create/",
+        method: "post",
+        data: {
+            title: newTask
+        },
+    }).catch(function(err) {
+        //displayErrorToast("something went wrong")  
+        console.log(err)
+    })
+
+
+      
+
+      this.$emit('newTask')
 
     },
   },

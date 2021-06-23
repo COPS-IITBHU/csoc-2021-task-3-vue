@@ -136,6 +136,7 @@ export default defineComponent({
 
 
     async getTasks() {
+      console.log("clicked")
       /***
        * @todo Fetch the tasks created by the user and display them.
        * @todo also the function to display a single new task added
