@@ -33,6 +33,7 @@
           </label>
           <div class="">
             <button
+              :id="'doneBtn' + todo.id"
               class="
                 hideme
                 bg-transparent
@@ -52,10 +53,10 @@
               Done
             </button>
           </div>
-          <div :class="['todo-task text-gray-600']">
+          <div :class="['todo-task text-gray-600']" :id="'title' + todo.id">
             {{ todo.title }}
           </div>
-          <span class="">
+          <span class="" :id="'buttons'+todo.id">
             <button
               style="margin-right: 5px"
               type="button"
@@ -199,17 +200,57 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(_index, _id) {},
+    updateTask(_index, _id) {
+
+      let newTitle = id(_id).value.trim();
+      console.log(newTitle);
+
+      if(newTitle && newTitle!= "") {
+         axios({
+            url: 'https://todo-app-csoc.herokuapp.com/' + "todo/"+_id+"/",
+            headers: {
+                Authorization: "Token " + localStorage.getItem("token"),
+            },
+            method: "patch",
+            data: {
+                id: _id,
+                title: newTitle,
+            }
+    
+        }).then(function({data, status}) {
+            console.log("edited")
+            id("title" + _id).innerText = newTitle;
+            id(_id).value = "";
+        }).catch(function(err) {
+            console.log(err)
+        })
+      }
+
+
+      id("doneBtn" + _id).classList.add("hideme");
+      id(_id).classList.add("hideme");
+      id("title" + _id).classList.remove("hideme");
+      id("buttons"+ _id).classList.remove("hideme");
+    },
     /**
      * toggle visibility of input and buttons for a single todo
      * @argument {number} index - index of element to toggle
      * @todo add in bindings in dom so that 'hideme' class is dynamic or use conditional rendering
      * @hint read about class bindings in vue
      */
+
+
     editTask(index) {
       this.todos[index].editing = !this.todos[index].editing;
       console.log("edit");
+      let todoId = this.todos[index].id;
+      id("doneBtn" + todoId).classList.remove("hideme");
+      id(todoId).classList.remove("hideme");
+      id("title" + todoId).classList.add("hideme");
+      id("buttons"+todoId).classList.add("hideme");
     },
+
+
     /**
      * Function to delete a single todo
      * @argument {number} _index - index of element to update in todos array
