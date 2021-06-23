@@ -120,26 +120,47 @@ export default defineComponent({
     function register() {
       if (!validateField()) return
 
-      const data = {
-        name: `${state.firstName} ${state.lastName}`,
+      let namestr = state.firstName + " " + state.lastName;
+
+      // `${state.firstName} ${state.lastName}`
+
+      const dataf = {
+        name: namestr,
         email: state.email,
         username: state.username,
         password: state.password,
       }
 
+      console.log(dataf);
+
       $toast.info('Please wait...')
 
-      $axios
-        .$post('auth/register', data)
-        .then(({ data }) => {
-          store.commit('setToken', data.token)
-          redirect('/')
+
+     $axios({
+            url: 'https://todo-app-csoc.herokuapp.com/' + 'auth/register/',
+            method: 'post',
+            data: dataf,
+        }).then(function({data, status}) {
+          localStorage.setItem('token', data.token);
+          window.location.href = '/';
+        }).catch(function(err) {
+          $toast.error('something went wrong');
         })
-        .catch(() => {
-          $toast.error(
-            'An account using same email or username is already created'
-          )
-        })
+
+
+
+      // $axios
+      //   .$post('auth/register', dataf)
+      //   .then(({ data }) => {
+      //     store.commit('setToken', data.token)
+      //     redirect('/')
+      //   })
+      //   .catch((err) => {
+      //     $toast.error(
+      //       'An account using same email or username is already created'
+      //     )
+      //     console.log(err);
+      //   })
     }
 
     return {

@@ -108,18 +108,19 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
+  middleware: 'auth',
   components: { addTask },
   data() {
     return {
       hello: 'hello world!',
       todos: [
         {
-          title: 'Henlo',
+          title: 'amaterasu',
           id: 1,
           editing: false,
         },
         {
-          title: 'Frens',
+          title: 'tsukiyomi',
           id: 2,
           editing: false,
         },

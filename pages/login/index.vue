@@ -61,6 +61,11 @@ export default defineComponent({
        * @todo 3. Commit token to Vuex Store
        * @hints checkout register/index.vue
        */
+
+      let usr = document.getElementById("inputUsername").value;
+      let pass = document.getElementById("inputPassword").value;
+
+      console.log(usr);
     }
 
     return {
