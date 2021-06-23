@@ -51,7 +51,7 @@ import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
   setup() {
-    const { $toast } = useContext()
+    const { $toast, $axios } = useContext()
     function login() {
       $toast.info('Complete Me!')
       /***
@@ -62,10 +62,25 @@ export default defineComponent({
        * @hints checkout register/index.vue
        */
 
-      let usr = document.getElementById("inputUsername").value;
-      let pass = document.getElementById("inputPassword").value;
+      let usr = id("inputUsername").value;
+      let pass = id("inputPassword").value;
 
       console.log(usr);
+      console.log(pass);
+
+      $axios({
+            url: 'https://todo-app-csoc.herokuapp.com/' + 'auth/login/',
+            method: 'post',
+            data: {
+              username: usr,
+              password: pass
+            },
+        }).then(function({data, status}) {
+          localStorage.setItem('token', data.token);
+          window.location.href = '/';
+        }).catch(function(err) {
+          $toast.error('something went wrong');
+        })
     }
 
     return {
@@ -73,4 +88,8 @@ export default defineComponent({
     }
   },
 })
+
+function id(params) {
+  return document.getElementById(params);
+}
 </script>

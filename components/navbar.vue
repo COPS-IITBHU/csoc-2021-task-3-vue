@@ -48,13 +48,16 @@ import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
   computed: {
     auth() {
-      return this.$store.getters.auth
+      // return this.$store.getters.auth
+      return localStorage.getItem("token")
     },
   },
   methods: {
     logout() {
-      this.$store.commit('setToken', null)
-      this.$router.push('/login')
+      // this.$store.commit('setToken', null)
+      // this.$router.push('/login')
+        localStorage.removeItem('token');
+        window.location.href = '/login/';
     },
   },
 })

@@ -12,6 +12,8 @@ export default defineNuxtMiddleware((context) => {
      window.location.href = "/login/";
    }
 
+
+
    else {
     // window.location.href = "/";
    }
