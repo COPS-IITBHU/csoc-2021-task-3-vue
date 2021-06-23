@@ -106,6 +106,7 @@
 <script lang>
 import { defineComponent } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
+import axios from 'axios'
 
 export default defineComponent({
   middleware: 'auth',
@@ -114,16 +115,16 @@ export default defineComponent({
     return {
       hello: 'hello world!',
       todos: [
-        {
-          title: 'amaterasu',
-          id: 1,
-          editing: false,
-        },
-        {
-          title: 'tsukiyomi',
-          id: 2,
-          editing: false,
-        },
+        // {
+        //   title: 'amaterasu',
+        //   id: 1,
+        //   editing: false,
+        // },
+        // {
+        //   title: 'tsukiyomi',
+        //   id: 2,
+        //   editing: false,
+        // },
       ],
       loading: false,
     }
@@ -132,6 +133,8 @@ export default defineComponent({
     this.getTasks()
   },
   methods: {
+
+
     async getTasks() {
       /***
        * @todo Fetch the tasks created by the user and display them.
@@ -139,7 +142,36 @@ export default defineComponent({
        * @hints use store and set loading true
        * @caution you have to assign new value to todos for it to update
        */
+
+      let myTodos = []
+      this.todos = []
+        
+        const getting = await axios({
+        headers: {
+            Authorization: 'Token ' + localStorage.getItem('token'),
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/',
+        method: 'get',
+      }).then(function({data, status}) { 
+        if(data.length){
+          data.forEach(function(task){
+            console.log(task);
+            myTodos.push(task)
+          })
+        }  
+      })
+
+    myTodos.forEach(element => {
+      this.todos.push(element)
+    });
+
+    console.log(this.todos)
     },
+
+
+
+
+
     /**
      * Function to update a single todo
      * @argument {number} _index - index of element to update in todos array
@@ -156,7 +188,8 @@ export default defineComponent({
      * @hint read about class bindings in vue
      */
     editTask(index) {
-      this.todos[index].editing = !this.todos[index].editing
+      this.todos[index].editing = !this.todos[index].editing;
+      console.log("edit")
     },
     /**
      * Function to delete a single todo

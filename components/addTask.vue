@@ -2,6 +2,7 @@
   <aside class="mx-auto flex justify-between mt-24 px-4">
     <label for="add task" class="flex-1">
       <input
+      id="addTask"
         type="text"
         name="add task"
         class="
@@ -55,7 +56,17 @@ export default defineComponent({
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
+
+      console.log("add")
+      console.log(this.$parent)
+      let create = id("addTask").value
+      if(create) console.log(create)
+
     },
   },
 })
+
+function id(params) {
+  return document.getElementById(params)
+}
 </script>
