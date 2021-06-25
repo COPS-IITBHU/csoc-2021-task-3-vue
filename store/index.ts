@@ -1,9 +1,9 @@
-export const state: { token: null | string; loggedIn: boolean } = {
+export const state = (): { token: null | string; loggedIn: boolean } => ({
   token: null,
   loggedIn: false,
-}
+})
 
-export type State = typeof state
+export type State = ReturnType<typeof state>
 
 export const getters = {
   token: (state: State) => state.token,
