@@ -5,6 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
+          v-model="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -16,6 +17,7 @@
         <input
           id="inputPassword"
           type="password"
+          v-model="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
           placeholder="Password"
@@ -46,12 +48,32 @@
 </template>
 
 <script>
-import { useContext } from '@nuxtjs/composition-api'
-import { defineComponent } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
+  data(){
+    return{
+      username : '',
+      password : ''
+    }
+  },
   setup() {
-    const { $toast } = useContext()
+  
+    const { redirect, $axios, store, $toast } = useContext()
+    const validateField = () => {
+      if (
+        this.username === '' ||
+        this.password === '' 
+      ) {
+        $toast.error('Please fill all the fields correctly.')
+        return false
+      }
+      return true
+    }
     function login() {
       $toast.info('Complete Me!')
       /***
@@ -61,6 +83,22 @@ export default defineComponent({
        * @todo 3. Commit token to Vuex Store
        * @hints checkout register/index.vue
        */
+      if (!validateField()) return
+      const data={
+        username : this.username,
+        password : this.password
+      }
+      $axios
+        .post('auth/login/',data)
+        .then(({data}) => {
+          store.commit('setToken', data.token)
+          redirect('/')
+        })
+        .catch(() => {
+          $toast.error(
+            'INVALID CREDENTIALS'
+          )
+        })
     }
 
     return {

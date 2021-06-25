@@ -108,6 +108,7 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
+  middleware: ['auth'],
   components: { addTask },
   data() {
     return {

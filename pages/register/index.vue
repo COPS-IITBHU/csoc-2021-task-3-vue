@@ -130,15 +130,19 @@ export default defineComponent({
       $toast.info('Please wait...')
 
       $axios
-        .$post('auth/register', data)
-        .then(({ data }) => {
-          store.commit('setToken', data.token)
-          redirect('/')
+        .$post('auth/register/', data)
+        .then(response => {
+          console.log(response)
+          store.commit('setToken', response);
+          
+          redirect('/');
         })
-        .catch(() => {
+        .catch((e) => {
+
           $toast.error(
             'An account using same email or username is already created'
           )
+          console.log(e)
         })
     }
 
