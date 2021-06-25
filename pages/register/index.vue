@@ -5,7 +5,7 @@
       <label for="inputFirstName">
         <input
           id="inputFirstName"
-          v-model="firstName"
+          v-model.trim="firstName"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputFirstName"
@@ -15,7 +15,7 @@
       <label for="inputLastName">
         <input
           id="inputLastName"
-          v-model="lastName"
+          v-model.trim="lastName"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputLastName"
@@ -26,7 +26,7 @@
       <label for="inputEmail">
         <input
           id="inputEmail"
-          v-model="email"
+          v-model.trim="email"
           type="email"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputEmail"
@@ -37,7 +37,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
-          v-model="username"
+          v-model.trim="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -48,7 +48,7 @@
       <label for="inputPassword">
         <input
           id="inputPassword"
-          v-model="password"
+          v-model.trim="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -130,9 +130,9 @@ export default defineComponent({
       $toast.info('Please wait...')
 
       $axios
-        .$post('auth/register', data)
-        .then(({ data }) => {
-          store.commit('setToken', data.token)
+        .$post('auth/register/', data)
+        .then(({ token }) => {
+          store.commit('setToken', token)
           redirect('/')
         })
         .catch(() => {
