@@ -84,7 +84,7 @@ export default defineComponent({
         .catch((err) => {
           console.log(err)
           $toast.error(
-            'An account using same email or username is already created'
+            'invalid credentials'
           )
         })
 

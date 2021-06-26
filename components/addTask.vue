@@ -78,8 +78,8 @@ export default defineComponent({
         console.log(data);
         this.$toast.success("done");
       })
-      this.$emit('newTask')
       this.title = '';
+      this.$emit('newTask')
       }
     },
   },

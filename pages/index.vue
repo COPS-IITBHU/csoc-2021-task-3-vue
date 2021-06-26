@@ -111,6 +111,10 @@
 </template>
 
 <script lang>
+
+//// USERNAME : blackFlames
+//// PASSWORD : amaterasu
+
 import { defineComponent, useContext } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
@@ -197,9 +201,10 @@ export default defineComponent({
                 title: newTitle,
             }
         }).then(function({data, status}) {
+            all.$toast.success("done");
             console.log("success")
         }).catch(function(err) {
-            //this.$toast("something went wrong");
+            all.$toast.error("something went wrong");
             console.log(err)
         })
       } else {
@@ -247,8 +252,10 @@ export default defineComponent({
         method: 'delete',
       }).then(function({data, status}) {
         all.todos.pop(all.todos[_id]);
+        all.$toast.success("done");
     }).catch(function(err) {
-      console.log(err)
+      console.log(err);
+      all.$toast.error("something went wrong");
     })
     },
   },
