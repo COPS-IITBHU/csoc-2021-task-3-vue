@@ -5,7 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
-          v-model="username"
+          v-model.trim="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -17,7 +17,7 @@
         <input
           id="inputPassword"
           type="password"
-          v-model="password"
+          v-model.trim="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
           placeholder="Password"
@@ -33,7 +33,8 @@
           rounded
           bg-transparent
           text-green-500
-          hover:text-white hover:bg-green-500
+          hover:text-white
+          hover:bg-green-500
           border border-green-500
           hover:border-transparent
           focus:outline-none
@@ -48,27 +49,22 @@
 </template>
 
 <script>
-import {
-  defineComponent,
-  reactive,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { defineComponent, reactive,toRefs, useContext } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  data(){
-    return{
-      username : '',
-      password : ''
-    }
-  },
-  setup() {
   
+  setup() {
     const { redirect, $axios, store, $toast } = useContext()
+    if(store.getters.auth){
+    redirect('/');
+  }
+    const state=reactive({
+      username: '',
+      password: '',
+    })
+    
     const validateField = () => {
-      if (
-        this.username === '' ||
-        this.password === '' 
-      ) {
+      if (state.username === '' || state.password === '') {
         $toast.error('Please fill all the fields correctly.')
         return false
       }
@@ -84,24 +80,24 @@ export default defineComponent({
        * @hints checkout register/index.vue
        */
       if (!validateField()) return
-      const data={
-        username : this.username,
-        password : this.password
+      const data = {
+        username: state.username,
+        password: state.password,
       }
       $axios
-        .post('auth/login/',data)
+        .post('auth/login/', data)
         .then(({data}) => {
+          console.log(data);
           store.commit('setToken', data.token)
           redirect('/')
         })
         .catch(() => {
-          $toast.error(
-            'INVALID CREDENTIALS'
-          )
+          $toast.error('INVALID CREDENTIALS')
         })
     }
 
     return {
+      ...toRefs(state),
       login,
     }
   },

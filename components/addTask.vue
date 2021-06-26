@@ -15,9 +15,11 @@
           text-sm
           border border-blueGray-300
           outline-none
-          focus:outline-none focus:ring
+          focus:outline-none
+          focus:ring
           w-full
         "
+        v-model="TaskData"
         placeholder="Enter Task"
       />
     </label>
@@ -43,19 +45,53 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  useContext,
+  toRefs,
+  reactive,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
-  methods: {
-    addTask() {
+  setup(props,context) {
+    const state = reactive({
+      TaskData: '',
+    })
+    const { $axios, store, $toast, } = useContext()
+    function addTask() {
       /**
        * @todo Complete this function.
        * @todo 1. Send the request to add the task to the backend server.
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
-    },
+      if(!state.TaskData) return;
+      const data = {
+        title: state.TaskData,
+      }
+      const headers = {
+        Authorization: 'Token ' + store.getters.token,
+      }
+      console.log(headers)
+      $axios
+        .post('todo/create/', data, { headers })
+        .then(function () {
+          $toast.success('Task Added')
+          
+          state.TaskData='';
+          context.emit('newTask');
+        }).catch((e) => {
+          $toast.error(e)
+        })
+        
+    }   
+    return {
+      addTask,
+      ...toRefs(state),
+      
+      
+    }
   },
 })
 </script>

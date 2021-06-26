@@ -10,4 +10,5 @@ export default defineNuxtMiddleware((context) => {
   if(!store.getters.auth){
     return redirect('/login/');
   }
+
 })
