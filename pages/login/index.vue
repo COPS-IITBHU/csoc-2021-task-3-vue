@@ -82,13 +82,13 @@ export default defineComponent({
           redirect('/')
         })
         .catch((err) => {
-          console.log(err)
+          //console.log(err)
           $toast.error(
             'invalid credentials'
           )
         })
 
-      console.log(dataForApi)
+      //console.log(dataForApi)
     }
 
     return {

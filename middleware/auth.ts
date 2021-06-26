@@ -8,7 +8,7 @@ export default defineNuxtMiddleware((context) => {
    */
 
   let x = context.store.getters
-  console.log(x)
+  //console.log(x)
 
   if(!x.auth) {
     context.redirect('/login/');

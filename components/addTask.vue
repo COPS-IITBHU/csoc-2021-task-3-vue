@@ -63,7 +63,8 @@ export default defineComponent({
        * @hint use emit to make a event that parent can observe
        */
       let token = this.$store.getters.token;
-      console.log(this.title)
+      let all = this;
+      //console.log(this.title)
       if(this.title.trim() != '') {
         this.$axios({
         headers: {
@@ -75,8 +76,8 @@ export default defineComponent({
           title: this.title
         }
       }).then(function({data, status}) { 
-        console.log(data);
-        this.$toast.success("done");
+        //console.log(data);
+        all.$toast.success("done");
       })
       this.title = '';
       this.$emit('newTask')

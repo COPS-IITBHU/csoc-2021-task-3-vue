@@ -152,7 +152,7 @@ export default defineComponent({
        * @caution you have to assign new value to todos for it to update
        */
       let token = this.$store.getters.token;
-      console.log(token)
+      //console.log(token)
       this.todos = [];
       let getTodos = [];
       await this.$axios({
@@ -162,7 +162,7 @@ export default defineComponent({
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/',
         method: 'get',
       }).then(function({data, status}) { 
-        console.log(data)
+        //console.log(data)
         data.forEach(function(task){
           task.editing = false;
           getTodos.push(task);
@@ -170,7 +170,7 @@ export default defineComponent({
       })
       this.todos = getTodos
 
-      console.log(this.todos)
+      //console.log(this.todos)
       this.loading = false
 
     },
@@ -186,7 +186,7 @@ export default defineComponent({
 
       let newTitle = this.todos[_index].title;
       let token = this.$store.getters.token;
-      console.log(newTitle);
+      //console.log(newTitle);
       let all = this;
 
       if(newTitle!= '') {
@@ -202,10 +202,10 @@ export default defineComponent({
             }
         }).then(function({data, status}) {
             all.$toast.success("done");
-            console.log("success")
+            //console.log("success")
         }).catch(function(err) {
             all.$toast.error("something went wrong");
-            console.log(err)
+            //console.log(err)
         })
       } else {
         this.$toast.error("empty field");
@@ -216,7 +216,7 @@ export default defineComponent({
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/' +_id +'/',
         method: 'get',
       }).then(function({data, status}) { 
-        console.log(data)
+        //console.log(data)
         all.todos[_index].title = data.title;
       })
       }
@@ -231,7 +231,7 @@ export default defineComponent({
      */
     editTask(index) {
       this.todos[index].editing = !this.todos[index].editing;
-      console.log(this.todos[index].editing);
+      //console.log(this.todos[index].editing);
     },
     /**
      * Function to delete a single todo
@@ -254,10 +254,11 @@ export default defineComponent({
         all.todos.pop(all.todos[_id]);
         all.$toast.success("done");
     }).catch(function(err) {
-      console.log(err);
+      //console.log(err);
       all.$toast.error("something went wrong");
     })
     },
   },
 })
 </script>
+
