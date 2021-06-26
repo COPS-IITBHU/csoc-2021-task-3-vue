@@ -70,6 +70,7 @@ export default defineComponent({
       const data = {
         title: state.TaskData,
       }
+      console.log(store.getters)
       const headers = {
         Authorization: 'Token ' + store.getters.token,
       }

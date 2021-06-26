@@ -89,6 +89,7 @@ import {
 
 export default defineComponent({
   setup() {
+    
     const state = reactive({
       firstName: '',
       lastName: '',
@@ -98,7 +99,9 @@ export default defineComponent({
     })
 
     const { redirect, $axios, store, $toast } = useContext()
-
+if(store.getters.auth){
+    redirect('/');
+  }
     const validateField = () => {
       if (
         state.firstName === '' ||
@@ -131,8 +134,9 @@ export default defineComponent({
 
       $axios
         .$post('auth/register/', data)
-        .then(token  => {
-          store.commit('setToken', token)
+        .then(data  => {
+          console.log(data.token)
+          store.commit('setToken', data.token)
           redirect('/')
         })
         .catch((e) => {
@@ -140,7 +144,7 @@ export default defineComponent({
           $toast.error(
             'An account using same email or username is already created'
           )
-          console.log(e)
+   
         })
     }
 

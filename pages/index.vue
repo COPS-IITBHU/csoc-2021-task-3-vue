@@ -144,10 +144,12 @@ export default defineComponent({
       this.$axios.get('todo/', { headers })
           .then(({data})=>{
             this.todos=[];
-            for(let element of data){
+            if(data){
+              for(let element of data){
               element.editing=false;
               this.todos.push(element);
               
+            }
             }
             console.log(this.todos);
           })
@@ -176,6 +178,7 @@ export default defineComponent({
       .then(()=>{
          this.todos[_index].editing = !this.todos[_index].editing;
          this.todos[_index].title=this.newTitle;
+         this.newTitle='';
       })
     },
     /**
