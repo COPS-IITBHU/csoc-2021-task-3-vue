@@ -64,7 +64,8 @@ export default defineComponent({
        */
       let token = this.$store.getters.token;
       console.log(this.title)
-      this.$axios({
+      if(this.title.trim() != '') {
+        this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
@@ -74,9 +75,12 @@ export default defineComponent({
           title: this.title
         }
       }).then(function({data, status}) { 
-        console.log(data)
+        console.log(data);
+        this.$toast.success("done");
       })
       this.$emit('newTask')
+      this.title = '';
+      }
     },
   },
 })

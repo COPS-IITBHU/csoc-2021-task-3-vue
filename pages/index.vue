@@ -203,6 +203,7 @@ export default defineComponent({
             console.log(err)
         })
       } else {
+        this.$toast.error("empty field");
         this.$axios({
         headers: {
             Authorization: 'Token ' + token,
