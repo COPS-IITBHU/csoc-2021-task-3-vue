@@ -4,6 +4,8 @@
       <input
         type="text"
         name="add task"
+        id="inputTitle"
+        v-model="title"
         class="
           todo-add-task-input
           px-4
@@ -47,6 +49,11 @@ import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
+  data() {
+    return {
+      title: ''
+    }
+  },
   methods: {
     addTask() {
       /**
@@ -55,6 +62,21 @@ export default defineComponent({
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
+      let token = this.$store.getters.token;
+      console.log(this.title)
+      this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/create/',
+        method: 'post',
+        data: {
+          title: this.title
+        }
+      }).then(function({data, status}) { 
+        console.log(data)
+      })
+      this.$emit('newTask')
     },
   },
 })

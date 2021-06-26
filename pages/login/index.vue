@@ -5,6 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
+          v-model="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -15,6 +16,7 @@
       <label for="password">
         <input
           id="inputPassword"
+          v-model="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -50,10 +52,16 @@ import { useContext } from '@nuxtjs/composition-api'
 import { defineComponent } from '@vue/composition-api'
 
 export default defineComponent({
+  data() {
+    return {
+      username: '',
+      password: ''
+    }
+  },
   setup() {
-    const { $toast } = useContext()
+    const { $toast,$axios,store,redirect} = useContext()
     function login() {
-      $toast.info('Complete Me!')
+      $toast.info('loading')
       /***
        * @todo Complete this function.
        * @todo 1. Write code for form validation.
@@ -61,6 +69,26 @@ export default defineComponent({
        * @todo 3. Commit token to Vuex Store
        * @hints checkout register/index.vue
        */
+
+      let dataForApi = {
+        username: this.username,
+        password: this.password
+      }
+
+      $axios
+        .$post('auth/login/', dataForApi)
+        .then(({ token }) => {
+          store.commit('setToken', token)
+          redirect('/')
+        })
+        .catch((err) => {
+          console.log(err)
+          $toast.error(
+            'An account using same email or username is already created'
+          )
+        })
+
+      console.log(dataForApi)
     }
 
     return {

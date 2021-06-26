@@ -23,8 +23,10 @@
             <input
               :id="todo.id"
               type="text"
+              v-if="todo.editing"
+              v-model="todo.title"
               :class="[
-                'hideme appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
+                'appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
               ]"
               :name="todo.title"
               placeholder="Edit The Task"
@@ -33,7 +35,6 @@
           <div class="">
             <button
               class="
-                hideme
                 bg-transparent
                 hover:bg-gray-500
                 text-gray-700 text-sm
@@ -46,12 +47,14 @@
                 todo-update-task
               "
               type="button"
+              id="doneBtn"
+              v-if="todo.editing"
               @click="updateTask(index, todo.id)"
             >
               Done
             </button>
           </div>
-          <div :class="['todo-task text-gray-600']">
+          <div :class="['todo-task text-gray-600']" id="title" v-if="!todo.editing">
             {{ todo.title }}
           </div>
           <span class="">
@@ -67,6 +70,8 @@
                 px-2
                 py-2
               "
+              id="editBtn"
+              v-if="!todo.editing"
               @click="editTask(index)"
             >
               <img
@@ -87,6 +92,8 @@
                 px-2
                 py-2
               "
+              id="deleteBtn"
+              v-if="!todo.editing"
               @click="deleteTask(index, todo.id)"
             >
               <img
@@ -104,11 +111,12 @@
 </template>
 
 <script lang>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, useContext } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
   components: { addTask },
+  middleware: 'auth',
   data() {
     return {
       hello: 'hello world!',
@@ -132,12 +140,35 @@ export default defineComponent({
   },
   methods: {
     async getTasks() {
+      this.loading = true;
       /***
        * @todo Fetch the tasks created by the user and display them.
        * @todo also the function to display a single new task added
        * @hints use store and set loading true
        * @caution you have to assign new value to todos for it to update
        */
+      let token = this.$store.getters.token;
+      console.log(token)
+      this.todos = [];
+      let getTodos = [];
+      await this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/',
+        method: 'get',
+      }).then(function({data, status}) { 
+        console.log(data)
+        data.forEach(function(task){
+          task.editing = false;
+          getTodos.push(task);
+        })
+      })
+      this.todos = getTodos
+
+      console.log(this.todos)
+      this.loading = false
+
     },
     /**
      * Function to update a single todo
@@ -147,7 +178,45 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(_index, _id) {},
+    updateTask(_index, _id) {
+
+      let newTitle = this.todos[_index].title;
+      let token = this.$store.getters.token;
+      console.log(newTitle);
+      let all = this;
+
+      if(newTitle!= '') {
+          this.$axios({
+            url: 'https://todo-app-csoc.herokuapp.com/' + "todo/" + _id + "/",
+            headers: {
+                Authorization: "Token " + token,
+            },
+            method: "patch",
+            data: {
+                id: _id,
+                title: newTitle,
+            }
+        }).then(function({data, status}) {
+            console.log("success")
+        }).catch(function(err) {
+            //this.$toast("something went wrong");
+            console.log(err)
+        })
+      } else {
+        this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/' +_id +'/',
+        method: 'get',
+      }).then(function({data, status}) { 
+        console.log(data)
+        all.todos[_index].title = data.title;
+      })
+      }
+
+      this.todos[_index].editing = !this.todos[_index].editing;
+    },
     /**
      * toggle visibility of input and buttons for a single todo
      * @argument {number} index - index of element to toggle
@@ -155,7 +224,8 @@ export default defineComponent({
      * @hint read about class bindings in vue
      */
     editTask(index) {
-      this.todos[index].editing = !this.todos[index].editing
+      this.todos[index].editing = !this.todos[index].editing;
+      console.log(this.todos[index].editing);
     },
     /**
      * Function to delete a single todo
@@ -165,7 +235,21 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(_index, _id) {},
+    deleteTask(_index, _id) {
+      let token = this.$store.getters.token;
+      let all = this;
+      this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/' +_id +'/',
+        method: 'delete',
+      }).then(function({data, status}) {
+        all.todos.pop(all.todos[_id]);
+    }).catch(function(err) {
+      console.log(err)
+    })
+    },
   },
 })
 </script>
