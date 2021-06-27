@@ -182,7 +182,7 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(_index, _id) {
+    async updateTask(_index, _id) {
 
       let newTitle = this.todos[_index].title;
       let token = this.$store.getters.token;
@@ -190,7 +190,7 @@ export default defineComponent({
       let all = this;
 
       if(newTitle!= '') {
-          this.$axios({
+          await this.$axios({
             url: 'https://todo-app-csoc.herokuapp.com/' + "todo/" + _id + "/",
             headers: {
                 Authorization: "Token " + token,
@@ -241,17 +241,19 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(_index, _id) {
+    async deleteTask(_index, _id) {
       let token = this.$store.getters.token;
       let all = this;
-      this.$axios({
+      await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/' +_id +'/',
         method: 'delete',
       }).then(function({data, status}) {
-        all.todos.pop(all.todos[_id]);
+        //all.getTasks();
+        all.todos = all.todos.filter(item => item.id !== _id)
+        //console.log(all.todos)
         all.$toast.success("done");
     }).catch(function(err) {
       //console.log(err);

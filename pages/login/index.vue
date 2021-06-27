@@ -61,7 +61,7 @@ export default defineComponent({
   },
   setup() {
     const { $toast,$axios,store,redirect} = useContext()
-    function login() {
+    async function login() {
       $toast.info('loading')
       /***
        * @todo Complete this function.
@@ -83,7 +83,7 @@ export default defineComponent({
 
       console.log(state)
 
-      $axios
+      await $axios
         .$post('auth/login/', dataForApi)
         .then(({ token }) => {
           store.commit('setToken', token);

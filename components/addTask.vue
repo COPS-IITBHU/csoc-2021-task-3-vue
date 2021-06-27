@@ -55,7 +55,7 @@ export default defineComponent({
     }
   },
   methods: {
-    addTask() {
+    async addTask() {
       /**
        * @todo Complete this function.
        * @todo 1. Send the request to add the task to the backend server.
@@ -66,7 +66,7 @@ export default defineComponent({
       let all = this;
       //console.log(this.title)
       if(this.title.trim() != '') {
-        this.$axios({
+        await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
