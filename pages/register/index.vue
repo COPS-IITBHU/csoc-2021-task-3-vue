@@ -137,6 +137,7 @@ if(store.getters.auth){
         .then(data  => {
           console.log(data.token)
           store.commit('setToken', data.token)
+
           redirect('/')
         })
         .catch((e) => {
