@@ -9,6 +9,9 @@
           <li class="font-semibold text-white">
             <nuxt-link to="/">Tasks</nuxt-link>
           </li>
+          <li>
+            <img :src="'https://ui-avatars.com/api/?name=' + name + '&background=330066&size=33&color=fff'" class="rounded-circle" :id="avatar-image"><span class="todo-profile-name" id="profile-name" >{{name}}</span>
+          </li>
         </ul>
         <ul v-else class="flex">
           <li class="text-white mr-2">
@@ -46,6 +49,16 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
+  data() {
+    return {
+      name: '',
+      email: '',
+      username: ''
+    }
+  },
+  mounted() {
+    this.getDetails();
+  },
   computed: {
     auth() {
       return this.$store.getters.auth
@@ -55,7 +68,37 @@ export default defineComponent({
     logout() {
       this.$store.commit('setToken', null)
       this.$router.replace('/login/')
+      .catch(function (err) {
+        console.log(err);
+      })
     },
+    async getDetails() {
+      let test;
+      let token = this.$store.getters.token;
+      await this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'auth/profile/',
+        method: 'get',
+      }).then(function({data, status}) {
+      test = JSON.parse(JSON.stringify(data))
+      console.log(test)
+    });
+    this.name = test.name;
+    this.username = test.username;
+    this.email = test.email;
+    }
   },
 })
 </script>
+
+<style>
+.todo-profile-name {
+  width: 90px;
+}
+.rounded-circle {
+  width: 50px;
+  border-radius: 12px;
+}
+</style>

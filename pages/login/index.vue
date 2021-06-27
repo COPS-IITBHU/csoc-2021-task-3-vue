@@ -50,6 +50,7 @@
 <script>
 import { useContext } from '@nuxtjs/composition-api'
 import { defineComponent } from '@vue/composition-api'
+import { state } from '~/store'
 
 export default defineComponent({
   data() {
@@ -70,16 +71,23 @@ export default defineComponent({
        * @hints checkout register/index.vue
        */
 
+      if(store.getters.auth) {
+        redirect('/');
+        return;
+      }
+
       let dataForApi = {
         username: this.username,
         password: this.password
       }
 
+      console.log(state)
+
       $axios
         .$post('auth/login/', dataForApi)
         .then(({ token }) => {
-          store.commit('setToken', token)
-          redirect('/')
+          store.commit('setToken', token);
+          redirect('/');
         })
         .catch((err) => {
           //console.log(err)
