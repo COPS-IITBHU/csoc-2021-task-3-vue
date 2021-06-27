@@ -1,7 +1,7 @@
 <template>
   <main class="max-w-lg mx-auto px-6">
     <add-task @newTask="getTasks" />
-    <transition>
+    <transition name="fade">
       <span v-if="loading">Fetching Tasks....</span>
       <ul v-else class="flex-col mt-9 mx-auto">
         <li
@@ -125,16 +125,16 @@ export default defineComponent({
     return {
       hello: 'hello world!',
       todos: [
-        {
-          title: 'Henlo',
-          id: 1,
-          editing: false,
-        },
-        {
-          title: 'Frens',
-          id: 2,
-          editing: false,
-        },
+        // {
+        //   title: 'Henlo',
+        //   id: 1,
+        //   editing: false,
+        // },
+        // {
+        //   title: 'Frens',
+        //   id: 2,
+        //   editing: false,
+        // },
       ],
       loading: false,
     }
@@ -261,4 +261,14 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: font-size 2s;
+}
+.fade-enter, .fade-leave-to  {
+  font-size: 0px;
+}
+
+</style>
 
