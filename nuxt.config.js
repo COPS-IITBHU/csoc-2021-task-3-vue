@@ -30,6 +30,7 @@ export default {
     '@nuxtjs/stylelint-module',
     'nuxt-windicss',
     '@nuxtjs/composition-api/module',
+    'nuxt-vite',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
