@@ -1,9 +1,9 @@
 <template>
-  <main class="max-w-lg mx-auto px-6">
+  <main class="max-w-lg mx-auto px-8">
     <add-task @newTask="getTasks" />
     <transition>
       <span v-if="loading">Fetching Tasks....</span>
-      <ul v-else class="flex-col mt-9 mx-auto">
+      <ul v-else class="flex-col mt-3 mx-auto">
         <li
           v-for="(todo, index) in todos"
           :key="todo.id"
@@ -14,7 +14,7 @@
             rounded
             px-2
             py-2
-            justify-between
+            justify-between justify-self-start
             items-center
             mb-2
           "
@@ -35,7 +35,6 @@
           <div class="">
             <button
               class="
-                
                 bg-transparent
                 hover:bg-gray-500
                 text-gray-700 text-sm
@@ -54,7 +53,7 @@
               Done
             </button>
           </div>
-          <div :class="['todo-task text-gray-600']" v-if="!todo.editing">
+          <div :class="['todo-task text-gray-600 ']" v-if="!todo.editing">
             {{ todo.title }}
           </div>
           <span class="">
@@ -63,7 +62,8 @@
               type="button"
               class="
                 bg-transparent
-                hover:bg-yellow-500 hover:text-white
+                hover:bg-yellow-500
+                hover:text-white
                 border border-yellow-500
                 hover:border-transparent
                 rounded
@@ -85,7 +85,8 @@
               type="button"
               class="
                 bg-transparent
-                hover:bg-red-500 hover:text-white
+                hover:bg-red-500
+                hover:text-white
                 border border-red-500
                 hover:border-transparent
                 rounded
@@ -111,7 +112,7 @@
 </template>
 
 <script lang>
-import { defineComponent,useContext,$toast } from '@nuxtjs/composition-api'
+import { defineComponent, useContext, $toast } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
@@ -122,15 +123,14 @@ export default defineComponent({
       hello: 'hello world!',
       todos: [],
       loading: false,
-      newTitle:'',
+      newTitle: '',
     }
   },
   mounted() {
     this.getTasks()
   },
-  
+
   methods: {
-    
     async getTasks() {
       /***
        * @todo Fetch the tasks created by the user and display them.
@@ -139,23 +139,23 @@ export default defineComponent({
        * @caution you have to assign new value to todos for it to update
        */
       const headers = {
-        Authorization: "Token " +  this.$store.getters.token,
+        Authorization: 'Token ' + this.$store.getters.token,
       }
-      this.$axios.get('todo/', { headers })
-          .then(({data})=>{
-            this.todos=[];
-            if(data){
-              for(let element of data){
-              element.editing=false;
-              this.todos.push(element);
-              
+      this.$axios
+        .get('todo/', { headers })
+        .then(({ data }) => {
+          this.todos = []
+          if (data) {
+            for (let element of data) {
+              element.editing = false
+              this.todos.push(element)
             }
-            }
-            console.log(this.todos);
-          })
-          .catch((e)=>{
-            console.log(e)
-          })
+          }
+          console.log(this.todos)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     },
     /**
      * Function to update a single todo
@@ -166,19 +166,18 @@ export default defineComponent({
      * @todo 2. Update the task in the dom.
      */
     updateTask(_index, _id) {
-      if(!this.newTitle) return;
+      if (!this.newTitle) return
       const headers = {
-        Authorization: "Token " +  this.$store.getters.token,
+        Authorization: 'Token ' + this.$store.getters.token,
       }
-      const data={
-        title: this.newTitle
+      const data = {
+        title: this.newTitle,
       }
       console.log(data)
-      this.$axios.put(`/todo/${_id}/`,data,{headers})
-      .then(()=>{
-         this.todos[_index].editing = !this.todos[_index].editing;
-         this.todos[_index].title=this.newTitle;
-         this.newTitle='';
+      this.$axios.put(`/todo/${_id}/`, data, { headers }).then(() => {
+        this.todos[_index].editing = !this.todos[_index].editing
+        this.todos[_index].title = this.newTitle
+        this.newTitle = ''
       })
     },
     /**
@@ -188,7 +187,6 @@ export default defineComponent({
      * @hint read about class bindings in vue
      */
     editTask(index) {
-
       this.todos[index].editing = !this.todos[index].editing
     },
     /**
@@ -201,15 +199,17 @@ export default defineComponent({
      */
     deleteTask(_index, _id) {
       const headers = {
-        Authorization: "Token " +  this.$store.getters.token,
+        Authorization: 'Token ' + this.$store.getters.token,
       }
-      this.$axios.delete(`/todo/${_id}/`,{headers})
-      .then(()=>{
-        this.todos.splice(_index,1);
-        this.$toast.success('Task Deleted')
-      }).catch((e)=>{
-        console.log(e)
-      })
+      this.$axios
+        .delete(`/todo/${_id}/`, { headers })
+        .then(() => {
+          this.todos.splice(_index, 1)
+          this.$toast.success('Task Deleted')
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     },
   },
 })

@@ -1,4 +1,5 @@
 <template>
+<main>
   <aside class="mx-auto flex justify-between mt-24 px-4">
     <label for="add task" class="flex-1">
       <input
@@ -42,6 +43,11 @@
       Add Task
     </button>
   </aside>
+  <div class="mx-auto flex justify-center mt-10 px-4">
+    <span class="inline-block justify-between bg-blue-600 py-1 mb-5 px-9 text-sm text-white font-bold rounded-full ">Available Tasks</span>
+  </div>
+  
+  </main>
 </template>
 
 <script>
