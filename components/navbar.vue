@@ -1,7 +1,7 @@
 <template>
   <nav class="bg-blue-600">
     <ul class="flex p-5 items-center justify-between">
-      <transition @change="getDetails">
+      <transition>
         <ul v-if="auth" class="flex space-x-4 items-center justify-between">
           <li>
             <h1 class="font-bold text-white text-xl">Todo</h1>
@@ -57,6 +57,11 @@ export default defineComponent({
     }
   },
   mounted() {
+    if(this.auth) {
+      this.getDetails();
+    }
+  },
+  updated() {
     if(this.auth) {
       this.getDetails();
     }
