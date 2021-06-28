@@ -68,8 +68,8 @@ export default defineComponent({
   },
   methods: {
     logout() {
-      this.$store.commit('setToken', null)
-      window.location.href = '/login/'
+      this.$store.commit('setToken', null);
+      this.$router.replace('/login/');
     },
     async getDetails() {
       let test;

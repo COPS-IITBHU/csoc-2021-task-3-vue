@@ -71,10 +71,10 @@ export default defineComponent({
        * @hints checkout register/index.vue
        */
 
-      if(store.getters.auth) {
-        redirect('/');
-        return;
-      }
+      // if(store.getters.auth) {
+      //   redirect('/');
+      //   return;
+      // }
 
       let dataForApi = {
         username: this.username,
