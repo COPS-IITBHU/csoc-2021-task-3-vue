@@ -2,7 +2,7 @@
   <nav class="bg-blue-600">
     <ul class="flex p-5 items-center justify-between">
       <transition>
-        <ul v-if="auth"  class="flex space-x-4 items-center justify-between">
+        <ul v-if="auth" class="flex space-x-4 items-center justify-between">
           <li>
             <h1 class="font-bold text-white text-xl">Todo</h1>
           </li>
@@ -33,8 +33,9 @@
               inline-flex
               items-center
             "
-          ><span class="text-blue-700 mr-2 bg-white p-1">{{initials}}</span>
-            <span class="mr-1">{{name}}</span>
+          >
+            <span class="text-blue-700 mr-2 bg-white p-1">{{ initials }}</span>
+            <span class="mr-1">{{ name }}</span>
             <svg
               class="fill-current h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -78,33 +79,38 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  data(){
-   
-    return{
-      initials:'',
-      name:'',
-
+  data() {
+    return {
+      initials: '',
+      name: '',
     }
   },
   computed: {
     auth() {
-       let firstName='';
-    let lastName='';
-    let ints='';
-    const headers = {
-        Authorization: 'Token ' + this.$store.getters.token,
+      if (this.$store.getters.auth) {
+        let firstName = ''
+        let lastName = ''
+        let ints = ''
+        const headers = {
+          Authorization: 'Token ' + this.$store.getters.token,
+        }
+        this.$axios
+          .get('auth/profile/', { headers })
+          .then(({ data }) => {
+            firstName = data.name.split(' ')[0]
+            ints += data.name.split(' ')[0][0].toUpperCase()
+            if (data.name.split(' ').length > 1) {
+              lastName = data.name.split(' ')[1]
+              ints += data.name.split(' ')[1][0].toUpperCase()
+            }
+            this.initials = ints
+            this.name = firstName + ' ' + lastName
+          })
+          .catch((e) => {
+            console.log(e)
+          })
       }
-    this.$axios.get('auth/profile/',{headers})
-    .then(({data})=>{
-      firstName=data.name.split(" ")[0];
-      ints+=data.name.split(" ")[0][0].toUpperCase();
-      if(data.name.split(" ").length>1){
-        lastName=data.name.split(" ")[1];
-        ints+=data.name.split(" ")[1][0].toUpperCase();
-      }
-      this.initials=ints;
-      this.name=firstName+" "+lastName;
-    })
+
       return this.$store.getters.auth
     },
   },
