@@ -1,7 +1,7 @@
 <template>
   <nav class="bg-blue-600">
     <ul class="flex p-5 items-center justify-between">
-      <transition>
+      <transition @change="getDetails">
         <ul v-if="auth" class="flex space-x-4 items-center justify-between">
           <li>
             <h1 class="font-bold text-white text-xl">Todo</h1>
@@ -57,7 +57,9 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.getDetails();
+    if(this.auth) {
+      this.getDetails();
+    }
   },
   computed: {
     auth() {
@@ -67,10 +69,7 @@ export default defineComponent({
   methods: {
     logout() {
       this.$store.commit('setToken', null)
-      this.$router.replace('/login/')
-      .catch(function (err) {
-        console.log(err);
-      })
+      window.location.href = '/login/'
     },
     async getDetails() {
       let test;
