@@ -24,16 +24,19 @@
               :id="todo.id"
               type="text"
               :class="[
-                'hideme appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
+                ' appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
               ]"
+              v-model="todo.title"
               :name="todo.title"
-              placeholder="Edit The Task"
+              placeholder="Edit the task"
+              v-show="todo.editing"
             />
           </label>
           <div class="">
             <button
+              id="jupdate"
               class="
-                hideme
+               
                 bg-transparent
                 hover:bg-gray-500
                 text-gray-700 text-sm
@@ -46,21 +49,31 @@
                 todo-update-task
               "
               type="button"
+              v-show="todo.editing"
               @click="updateTask(index, todo.id)"
             >
               Done
             </button>
           </div>
-          <div :class="['todo-task text-gray-600']">
-            {{ todo.title }}
+          <div :class="['todo-task text-gray-600']" id="output" v-show="!todo.editing">
+            
+                   {{ todo.title }}
+            
+                 
+            
+           
           </div>
           <span class="">
             <button
+
+              id="jedit"
               style="margin-right: 5px"
               type="button"
+              v-show="!todo.editing"
               class="
                 bg-transparent
-                hover:bg-yellow-500 hover:text-white
+                hover:bg-yellow-500
+                hover:text-white
                 border border-yellow-500
                 hover:border-transparent
                 rounded
@@ -77,10 +90,13 @@
               />
             </button>
             <button
+             id="jdelete"
               type="button"
+              v-show="!todo.editing"
               class="
                 bg-transparent
-                hover:bg-red-500 hover:text-white
+                hover:bg-red-500
+                hover:text-white
                 border border-red-500
                 hover:border-transparent
                 rounded
@@ -108,21 +124,15 @@ import { defineComponent } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
+  middleware: ['auth'],
+
   components: { addTask },
   data() {
     return {
+      
       hello: 'hello world!',
       todos: [
-        {
-          title: 'Henlo',
-          id: 1,
-          editing: false,
-        },
-        {
-          title: 'Frens',
-          id: 2,
-          editing: false,
-        },
+        
       ],
       loading: false,
     }
@@ -132,6 +142,30 @@ export default defineComponent({
   },
   methods: {
     async getTasks() {
+      this.loading=true;
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+
+      this.$axios
+        .get('todo/', { headers })
+        .then(({ data }) => {
+            this.loading=false;
+          this.todos = []
+           if(data)
+           {
+          for (let element of data) {
+            element.editing = false
+            this.todos.push(element)
+          }
+           }
+        
+        })
+        .catch(function (err) {
+          this.$toast.error('Something went wrong')
+        })
+        
+
       /***
        * @todo Fetch the tasks created by the user and display them.
        * @todo also the function to display a single new task added
@@ -147,7 +181,32 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(_index, _id) {},
+    updateTask(_index, _id) {
+      if (!this.todos[_index].title) {
+        return
+      }
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+      const data = {
+        title: this.todos[_index].title,
+      }
+     
+
+      this.$axios
+        .patch(`/todo/${_id}/`, data, { headers })
+        .then(()=> {
+          
+          this.todos[_index].editing = !this.todos[_index].editing
+         
+        })
+        .catch(function (err) {
+          this.$toast.error('Something went wrong')
+        })
+    },
+
+
+
     /**
      * toggle visibility of input and buttons for a single todo
      * @argument {number} index - index of element to toggle
@@ -155,7 +214,9 @@ export default defineComponent({
      * @hint read about class bindings in vue
      */
     editTask(index) {
-      this.todos[index].editing = !this.todos[index].editing
+     
+        this.todos[index].editing = !this.todos[index].editing;
+        
     },
     /**
      * Function to delete a single todo
@@ -165,7 +226,44 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(_index, _id) {},
+    deleteTask(_index, _id) {
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+      this.$axios.delete(`/todo/${_id}/`, { headers }).then(() => {
+        this.todos.splice(_index, 1)
+        this.$toast.success('Task Delete Successfully')
+      })
+    },
   },
 })
 </script>
+
+<style  scoped>
+
+#jedit{
+   
+   background-color:gold;
+}
+#jdelete{
+   
+   background-color:rgb(238, 70, 70);
+}
+#jedit:hover{
+   
+   border: 0.5px solid rgb(226, 193, 4);
+}
+#jdelete:hover{
+   
+   border: 0.5px solid red;
+}
+#output{
+  text-align: left;
+}
+#jupdate{
+ background-color:skyblue;
+}
+
+</style>
+
+

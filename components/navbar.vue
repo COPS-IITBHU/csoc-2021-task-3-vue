@@ -22,6 +22,7 @@
       <div v-if="auth" class="w-28 inline-block relative">
         <div class="group inline-block relative">
           <a
+            id="div1"
             class="
               rounded-b
               bg-gray-200
@@ -59,3 +60,8 @@ export default defineComponent({
   },
 })
 </script>
+<style  scoped>
+#div1{
+  color:white;
+}
+</style>

@@ -87,7 +87,9 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 
+
 export default defineComponent({
+ 
   setup() {
     const state = reactive({
       firstName: '',
@@ -98,6 +100,11 @@ export default defineComponent({
     })
 
     const { redirect, $axios, store, $toast } = useContext()
+
+     if(store.getters.auth)
+  {
+    redirect('/');
+  }
 
     const validateField = () => {
       if (
