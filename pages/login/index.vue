@@ -25,6 +25,7 @@
       </label>
 
       <button
+        id="loginbtn"
         type="submit"
         class="
           w-full
@@ -122,3 +123,8 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+#loginbtn{
+  background-color: lightgreen;
+}
+</style>

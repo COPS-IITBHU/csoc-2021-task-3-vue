@@ -57,6 +57,7 @@
       </label>
 
       <button
+      id="rgsbtn"
         type="submit"
         class="
           w-full
@@ -156,3 +157,8 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+#rgsbtn{
+  background-color: lightgreen;
+}
+</style>
