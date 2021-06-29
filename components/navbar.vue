@@ -46,6 +46,18 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
+   data() {
+    return {
+      name: '',
+      email: '',
+      username: ''
+    }
+  },
+  mounted() {
+    if(this.auth) {
+      this.getDetails();
+    }
+  },
   computed: {
     auth() {
       return this.$store.getters.auth
@@ -54,8 +66,25 @@ export default defineComponent({
   methods: {
     logout() {
       this.$store.commit('setToken', null)
-      this.$router.replace('/login')
+      this.$router.replace('/login/')
     },
+    async getDetails() {
+      let t;
+      let token = this.$store.getters.token;
+      await this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'auth/profile/',
+        method: 'get',
+      }).then(function({data, status}) {
+      t = JSON.parse(JSON.stringify(data))
+      //console.log(t)
+    });
+    this.name = t.name;
+    this.username = t.username;
+    this.email = t.email;
+    }
   },
 })
 </script>
