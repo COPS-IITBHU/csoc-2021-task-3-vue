@@ -190,6 +190,7 @@ export default defineComponent({
      */
     editTask(index) {
       this.$toast.info('Press Done to Save the Update before Proceeding!');
+      this.newTitle='';
       if(this.prev!==-1){
         this.todos[this.prev].editing = !this.todos[this.prev].editing
       }
