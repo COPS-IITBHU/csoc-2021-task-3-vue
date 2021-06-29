@@ -124,6 +124,7 @@ export default defineComponent({
       todos: [],
       loading: false,
       newTitle: '',
+      prev: -1,
     }
   },
   mounted() {
@@ -178,6 +179,7 @@ export default defineComponent({
         this.todos[_index].editing = !this.todos[_index].editing
         this.todos[_index].title = this.newTitle
         this.newTitle = ''
+        this.prev=-1;
       })
     },
     /**
@@ -187,7 +189,12 @@ export default defineComponent({
      * @hint read about class bindings in vue
      */
     editTask(index) {
+      this.$toast.info('Press Done to Save the Update before Proceeding!');
+      if(this.prev!==-1){
+        this.todos[this.prev].editing = !this.todos[this.prev].editing
+      }
       this.todos[index].editing = !this.todos[index].editing
+      this.prev=index;
     },
     /**
      * Function to delete a single todo
