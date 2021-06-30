@@ -31,6 +31,7 @@
               block
               whitespace-no-wrap
               hover:bg-gray-400
+              text-white
             "
             href="#"
             @click="logout"
@@ -56,12 +57,9 @@ export default defineComponent({
     logout() {
       this.$store.commit('setToken', null)
       this.$router.replace('/login')
+      redirect('/login/')
     },
   },
 })
 </script>
-<style  scoped>
-#div1{
-  color:white;
-}
-</style>
+

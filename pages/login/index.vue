@@ -5,7 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
-        v-model.trim="username"
+          v-model.trim="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -16,7 +16,7 @@
       <label for="password">
         <input
           id="inputPassword"
-           v-model.trim="password"
+          v-model.trim="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -32,13 +32,16 @@
           text-center
           py-3
           rounded
-          bg-transparent
+          bg-green-300
+          hover:bg-green-400
           text-green-500
-          hover:text-white hover:bg-green-500
+          hover:text-white
+          hover:bg-green-500
           border border-green-500
           hover:border-transparent
           focus:outline-none
           my-1
+          ...
         "
         @click="login"
       >
@@ -56,7 +59,6 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 
-
 export default defineComponent({
   setup() {
     const state = reactive({
@@ -68,10 +70,9 @@ export default defineComponent({
     })
 
     const { redirect, $axios, store, $toast } = useContext()
-     if(store.getters.auth)
-     {
-          redirect('/');
-     }
+    if (store.getters.auth) {
+      redirect('/')
+    }
 
     const validateField = () => {
       if (
@@ -110,9 +111,7 @@ export default defineComponent({
           redirect('/')
         })
         .catch(() => {
-          $toast.error(
-            'Unregistered Username and Password'
-          )
+          $toast.error('Unregistered Username and Password')
         })
     }
 
@@ -123,8 +122,4 @@ export default defineComponent({
   },
 })
 </script>
-<style scoped>
-#loginbtn{
-  background-color: lightgreen;
-}
-</style>
+
