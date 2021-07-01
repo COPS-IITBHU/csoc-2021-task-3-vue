@@ -46,17 +46,7 @@
     </aside>
     <div class="mx-auto flex justify-center mt-10 px-4">
       <span
-        class="
-          inline-block
-          justify-between
-          bg-blue-600
-          py-1
-          mb-5
-          px-9
-          text-sm text-white
-          font-bold
-          rounded-full
-        "
+        class=" inline-block justify-between bg-blue-600 py-1 mb-5 px-9 text-sm text-white font-bold rounded-full"
         >Available Tasks</span
       >
     </div>
