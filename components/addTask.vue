@@ -66,6 +66,7 @@ export default defineComponent({
       let all = this;
       //console.log(this.title)
       if(this.title.trim() != '') {
+        const data = 
         await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
@@ -75,13 +76,26 @@ export default defineComponent({
         data: {
           title: this.title
         }
-      }).then(function({data, status}) { 
-        //console.log(data);
-        all.$toast.success("done");
-      })
-      this.title = '';
-      this.$emit('newTask')
+      });
+      // .then(function({data, status}) { 
+      //   //console.log(data);
+      //   all.$toast.success("done");
+      // })
+      // this.title = '';
+      // this.$emit('newTask')
+      // }
+      console.log(data)
+      if(data.status == 200) {
+        this.$emit('newTask');
+        this.$toast.success("done");
+      } else {
+        this.$toast.error("something went wromg");
       }
+
+      this.title = '';
+
+      }
+
     },
   },
 })

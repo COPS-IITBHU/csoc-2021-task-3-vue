@@ -87,7 +87,7 @@ export default defineComponent({
         method: 'get',
       }).then(function({data, status}) {
       test = JSON.parse(JSON.stringify(data))
-      console.log(test)
+      //console.log(test)
     });
     this.name = test.name;
     this.username = test.username;
