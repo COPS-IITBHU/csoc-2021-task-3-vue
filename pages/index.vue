@@ -103,7 +103,7 @@ export default defineComponent({
     this.getTasks()
   },
   methods: {
-     getTasks() {
+    async getTasks() {
       this.loading = true
       const headers = {
         Authorization: 'Token ' + this.$store.getters.token,
