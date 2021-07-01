@@ -45,7 +45,8 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import {defineComponent } from '@nuxtjs/composition-api'
+
 
 export default defineComponent({
   computed: {
@@ -56,8 +57,9 @@ export default defineComponent({
   methods: {
     logout() {
       this.$store.commit('setToken', null)
-      this.$router.replace('/login')
-      redirect('/login/')
+      this.$router.push('/login/')
+      // redirect('/login/')
+      //  this.$router.replace('/login/')
     },
   },
 })
