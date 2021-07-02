@@ -61,11 +61,12 @@ export default defineComponent({
     const { $axios, store, $toast } = useContext()
 
     function addTask() {
-      console.log(5)
       if (!state.newTodo) {
         $toast.info('Please type a task first')
         return
       }
+
+      $toast.info('Adding new task...')
 
       const headers = {
         Authorization: 'Token ' + store.getters.token,
@@ -77,7 +78,6 @@ export default defineComponent({
       $axios
         .post('todo/create/', data, { headers })
         .then(function() {
-          console.log(6)
           context.emit('newTask'),
           state.newTodo = '',
           $toast.success('New task added successfully')

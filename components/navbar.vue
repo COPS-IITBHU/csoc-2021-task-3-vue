@@ -19,23 +19,33 @@
           </li>
         </ul>
       </transition>
-      <div v-if="auth" class="w-28 inline-block relative">
-        <div class="group inline-block relative">
-          <a
+      <div v-if="auth" class="inline-block relative">
+        <div class="group relative dropdown px-4 cursor-pointer font-bold text-base tracking-wide">
+          <button
+            style="margin-right: 1vw;"
+            type="button"
             class="
-              rounded-b
-              bg-gray-200
+              bg-transparent
+              text-white
+              hover:bg-gray-200 hover:text-black
+              border-4 border-white
+              hover:border-transparent
+              rounded-2xl
+              px-2
               py-2
-              px-4
-              block
-              whitespace-no-wrap
-              hover:bg-gray-400
             "
-            href="#"
-            @click="logout"
           >
-            Logout
-          </a>
+            <span id="profile-name" class="todo-profile-name flex items-center">
+              {{ name }}
+              <img :src="'https://ui-avatars.com/api/?name=' + this.name + '&background=random&size=35&rounded=true&bold=true&font-size=0.6'" class="ml-2">
+            </span>
+          </button>
+
+          <div class="group-hover:block dropdown-menu absolute hidden h-auto">
+            <ul @click="logout" class="top-0 w-48 bg-gray-100 shadow px-4 py-2 hover:bg-gray-200">
+              <li class="py-1"><a @click="logout" class="block text-purple-500 font-bold text-base uppercase hover:text-purple-700 cursor-pointer">Logout</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </ul>
@@ -46,15 +56,46 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
+  data() {
+    return {
+      name: '',
+    }
+  },
   computed: {
     auth() {
       return this.$store.getters.auth
     },
   },
+  mounted() {
+    if(this.auth) {
+      this.getName()
+    }
+  },
+  updated() {
+    if(this.auth) {
+      this.getName()
+    }
+  },
   methods: {
     logout() {
       this.$store.commit('setToken', null)
-      this.$router.replace('/login/')
+      this.$router.push('/login/')
+      this.$router.go()
+    },
+
+    async getName() {
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+
+      await this.$axios
+        .get('auth/profile/', { headers })
+        .then((data) => {
+          this.name = data.data.name
+        })
+        .catch(() => {
+          this.$toast.error('Some error occurred due to which your name and icon might not match :(')
+        })
     },
   },
 })

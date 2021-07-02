@@ -1,9 +1,21 @@
 <template>
   <main class="max-w-lg mx-auto px-6">
     <add-task @newTask="getTasks" />
-    <transition>
-      <span v-if="loading">Fetching Tasks....</span>
+    <transition :name="loading ? '' : 'loadingAnimation'">
+      <span v-if="loading" style="display: flex; justify-content: center">
+        <div
+          class="
+            loading_symbol
+            animate-spin
+            mt-5
+            border-t-6 border-green-500
+            rounded-full
+          "
+          style="width: 4.5rem; height: 4.5rem"
+        ></div>
+        Fetching Tasks...</span>
       <ul v-else class="flex-col mt-9 mx-auto">
+        <transition-group name="loadingAnimation">
         <li
           v-for="(todo, index) in todos"
           :key="todo.id"
@@ -100,6 +112,7 @@
             </button>
           </span>
         </li>
+        </transition-group>
       </ul>
     </transition>
   </main>
@@ -118,6 +131,7 @@ export default defineComponent({
       todos: [],
       loading: false,
       updatedTask: '',
+      prev: -1,
     }
   },
   mounted() {
@@ -184,6 +198,8 @@ export default defineComponent({
         .then(() => {
           this.todos[_index].title = this.updatedTask
           this.editTask(_index)
+          this.prev = -1
+          this.updatedTask = ''
           this.$toast.success('Task updated successfully')
         })
         .catch(() => {
@@ -199,6 +215,10 @@ export default defineComponent({
      */
     editTask(index) {
       this.todos[index].editing = !this.todos[index].editing
+      if(this.prev !== -1 && this.prev !== index) {
+        this.todos[this.prev].editing = !this.todos[index].editing
+      }
+      this.prev = index
     },
 
     /**
@@ -210,6 +230,7 @@ export default defineComponent({
      * @todo 2. Remove the task from the dom.
      */
     deleteTask(_index, _id) {
+      this.$toast.info('Deleting task...')
       const headers = {
         Authorization: 'Token ' + this.$store.getters.token,
       }
@@ -227,3 +248,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.loadingAnimation-enter-active,
+.loadingAnimation-leave-active {
+  transition: all 1s ease;
+}
+.loadingAnimation-enter-from,
+.loadingAnimation-leave-to {
+  opacity: 0;
+  transform: translateX(35vw);
+}
+</style>
