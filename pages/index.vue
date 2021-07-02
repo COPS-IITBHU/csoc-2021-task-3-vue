@@ -112,21 +112,13 @@ export default defineComponent({
   data() {
     return {
       hello: 'hello world!',
-      todos: [
-        {
-          title: 'Henlo',
-          id: 1,
-          editing: false,
-        },
-        {
-          title: 'Frens',
-          id: 2,
-          editing: false,
-        },
-      ],
+      todos: [],
       loading: false,
     }
   },
+
+
+  
   mounted() {
     this.getTasks()
   },
@@ -138,6 +130,26 @@ export default defineComponent({
        * @hints use store and set loading true
        * @caution you have to assign new value to todos for it to update
        */
+      this.loading = true
+
+      const headers = {
+  Authorization: 'Token ' + this.$store.getters.token,
+}
+
+      $axios
+        .$get('todo/',{headers})
+        .then(({ response }) => {
+          let data = response.data
+          for(let key in data)
+          {
+            this.todos.push(data[key])
+          }
+        })
+        .catch(() => {
+          $toast.error(
+            'Error occured'
+          )
+        })
     },
     /**
      * Function to update a single todo
@@ -147,7 +159,9 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(_index, _id) {},
+    updateTask(_index, _id) {
+
+    },
     /**
      * toggle visibility of input and buttons for a single todo
      * @argument {number} index - index of element to toggle
@@ -165,7 +179,20 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(_index, _id) {},
+    deleteTask(_index, _id) {
+      const headers = {
+       Authorization: 'Token ' + this.$store.getters.token,
+     }
+
+     $axios
+      .$delete('/todo/' + _id + '/', {headers})
+      .then(() => {
+        this.todos.splice(_index, 1)
+      })
+      .catch(() =>{
+        this.$toast.error('Error Occured')
+      })
+    },
   },
 })
 </script>
