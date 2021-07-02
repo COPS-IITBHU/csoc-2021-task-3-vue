@@ -21,10 +21,12 @@
         >
           <label :for="todo.id">
             <input
+              v-show="todo.editing"
               :id="todo.id"
+              v-model="updatedTask"
               type="text"
               :class="[
-                'hideme appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
+                'appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
               ]"
               :name="todo.title"
               placeholder="Edit The Task"
@@ -32,8 +34,8 @@
           </label>
           <div class="">
             <button
+              v-show="todo.editing"
               class="
-                hideme
                 bg-transparent
                 hover:bg-gray-500
                 text-gray-700 text-sm
@@ -109,22 +111,13 @@ import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
   components: { addTask },
+  middleware: ['auth'],
   data() {
     return {
       hello: 'hello world!',
-      todos: [
-        {
-          title: 'Henlo',
-          id: 1,
-          editing: false,
-        },
-        {
-          title: 'Frens',
-          id: 2,
-          editing: false,
-        },
-      ],
+      todos: [],
       loading: false,
+      updatedTask: '',
     }
   },
   mounted() {
@@ -138,7 +131,31 @@ export default defineComponent({
        * @hints use store and set loading true
        * @caution you have to assign new value to todos for it to update
        */
+      this.loading = true
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+
+      await this.$axios
+        .get('todo/', { headers })
+        .then(({ data }) => {
+          this.loading = false
+          this.todos = []
+          if (data.length) {
+            for (let particualar_task of data) {
+              particualar_task.editing = false
+              this.todos.push(particualar_task)
+            }
+          }
+          else {
+            this.$toast.info('No tasks currently. You can add tasks by typing a task and clicking on add task button')
+          }
+        })
+        .catch(() => {
+          this.$toast.error('Oops! Something went wrong')
+        })
     },
+
     /**
      * Function to update a single todo
      * @argument {number} _index - index of element to update in todos array
@@ -147,7 +164,33 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    updateTask(_index, _id) {},
+    updateTask(_index, _id) {
+      if (!this.updatedTask) {
+        this.$toast.info('Please enter the updated task first')
+        return
+      }
+
+      this.$toast.info('Upadating task...')
+
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+      const data = {
+        title: this.updatedTask,
+      }
+      
+      this.$axios
+        .patch(`todo/${_id}/`, data, { headers })
+        .then(() => {
+          this.todos[_index].title = this.updatedTask
+          this.editTask(_index)
+          this.$toast.success('Task updated successfully')
+        })
+        .catch(() => {
+          this.$toast.error('Oops! Something went wrong')
+        })
+    },
+    
     /**
      * toggle visibility of input and buttons for a single todo
      * @argument {number} index - index of element to toggle
@@ -157,6 +200,7 @@ export default defineComponent({
     editTask(index) {
       this.todos[index].editing = !this.todos[index].editing
     },
+
     /**
      * Function to delete a single todo
      * @argument {number} _index - index of element to update in todos array
@@ -165,7 +209,21 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    deleteTask(_index, _id) {},
+    deleteTask(_index, _id) {
+      const headers = {
+        Authorization: 'Token ' + this.$store.getters.token,
+      }
+
+      this.$axios
+        .delete(`todo/${_id}/`, { headers })
+        .then(() => {
+          this.todos.splice(_index, 1)
+          this.$toast.success('Task deleted successfully')
+        })
+        .catch(() => {
+          this.$toast.error('Something went wrong')
+        })
+    },
   },
 })
 </script>

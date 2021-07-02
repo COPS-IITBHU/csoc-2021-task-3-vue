@@ -2,6 +2,7 @@
   <aside class="mx-auto flex justify-between mt-24 px-4">
     <label for="add task" class="flex-1">
       <input
+        v-model="newTodo"
         type="text"
         name="add task"
         class="
@@ -43,19 +44,53 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
-  methods: {
-    addTask() {
-      /**
-       * @todo Complete this function.
-       * @todo 1. Send the request to add the task to the backend server.
-       * @todo 2. Add the task in the dom.
-       * @hint use emit to make a event that parent can observe
-       */
-    },
+  setup(props, context) {
+    const state = reactive({
+      newTodo: '',
+    })
+
+    const { $axios, store, $toast } = useContext()
+
+    function addTask() {
+      console.log(5)
+      if (!state.newTodo) {
+        $toast.info('Please type a task first')
+        return
+      }
+
+      const headers = {
+        Authorization: 'Token ' + store.getters.token,
+      }
+      const data = {
+        title: state.newTodo,
+      }
+
+      $axios
+        .post('todo/create/', data, { headers })
+        .then(function() {
+          console.log(6)
+          context.emit('newTask'),
+          state.newTodo = '',
+          $toast.success('New task added successfully')
+        })
+        .catch(() => {
+          $toast.error('Oops! Something went wrong. Try again later')
+        })
+    }
+
+    return {
+      ...toRefs(state),
+      addTask,
+    }
   },
 })
 </script>
