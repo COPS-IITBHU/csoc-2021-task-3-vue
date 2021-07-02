@@ -1,6 +1,6 @@
 <template>
   <main class="max-w-lg mx-auto items-center justify-center px-2">
-    <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+    <div class="bg-white px-6 py-8 my-18 rounded shadow-md text-black w-full">
       <h1 class="mb-8 text-3xl text-center">Register</h1>
       <label for="inputFirstName">
         <input
@@ -60,6 +60,7 @@
         type="submit"
         class="
           w-full
+          h-full
           text-center
           py-3
           rounded
@@ -149,3 +150,4 @@ export default defineComponent({
   },
 })
 </script>
+
