@@ -71,16 +71,14 @@ export default defineComponent({
     async getDetails() {
       let t;
       let token = this.$store.getters.token;
-      await this.$axios({
+      const detail= await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
         url: 'https://todo-app-csoc.herokuapp.com/' + 'auth/profile/',
         method: 'get',
-      }).then(function({data, status}) {
-      t = JSON.parse(JSON.stringify(data))
-      //console.log(t)
-    });
+      })
+      t=JSON.parse(JSON.stringify(detail.data));
     this.name = t.name;
     this.username = t.username;
     this.email = t.email;
