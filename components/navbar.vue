@@ -37,8 +37,8 @@
             "
             href="#"
           >
-            <div  class="flex w-50 font-semibold items-center" :class="class1">
-              <img class="w-10 rounded-full mr-2" :src='url'/>
+            <div  class="flex w-25 h-10 font-semibold items-center text-15px" :class="class1">
+              <img class="w-7 rounded-full mr-1" :src='url'/>
               {{username}}
             </div>
             <button class="font-semibold background-white w-25 h-10" :class="class2">

@@ -24,7 +24,7 @@
               :id="todo.id"
               type="text"
               :class="[
-                'appearance-none border rounded w-100 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
+                'appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
               ]"
               :name="todo.title"
               placeholder="Edit The Task"
@@ -35,7 +35,6 @@
           <div class="">
             <button
               class="
-                ml-20
                 bg-transparent
                 hover:bg-gray-500
                 text-gray-700 text-sm
