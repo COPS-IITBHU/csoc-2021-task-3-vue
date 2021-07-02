@@ -1,4 +1,4 @@
-import { defineNuxtMiddleware } from '@nuxtjs/composition-api'
+import { defineNuxtMiddleware} from '@nuxtjs/composition-api'
 
 export default defineNuxtMiddleware((context) => {
   /***
@@ -6,4 +6,11 @@ export default defineNuxtMiddleware((context) => {
    * @todo Redirect the user to main page if token is present in store
    * @hints check what propeties context has
    */
+
+  if(!context.store.getters.auth){
+    context.redirect('/login/')
+  }
+  // else{
+  //   context.redirect('/')
+  // }
 })
