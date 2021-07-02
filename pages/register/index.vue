@@ -88,7 +88,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup({app}) {
+  setup() {
     const state = reactive({
       firstName: '',
       lastName: '',
@@ -131,9 +131,8 @@ export default defineComponent({
 
       $axios
         .$post('auth/register/', data)
-        .then((response) => {
-          store.commit('setToken', response.token)
-          app.$cookies.set('token',response.token)
+        .then((value) => {
+          store.commit('setToken', value.token)
           redirect('/')
         })
         .catch(() => {

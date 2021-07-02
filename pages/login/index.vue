@@ -85,7 +85,6 @@ export default defineComponent({
         })
         .then((response) => {
           store.commit('setToken', response.token)
-          this.$cookies.set('token',response.token)
           router.push('/')
         })
         .catch((err) => {
