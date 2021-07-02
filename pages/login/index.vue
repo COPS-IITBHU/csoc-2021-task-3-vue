@@ -9,6 +9,7 @@
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
           placeholder="Username"
+          v-model="info.username"
         />
       </label>
 
@@ -19,6 +20,7 @@
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
           placeholder="Password"
+          v-model="info.password"
         />
       </label>
 
@@ -31,13 +33,14 @@
           rounded
           bg-transparent
           text-green-500
-          hover:text-white hover:bg-green-500
+          hover:text-white
+          hover:bg-green-500
           border border-green-500
           hover:border-transparent
           focus:outline-none
           my-1
         "
-        @click="login"
+        @click="login()"
       >
         Login
       </button>
@@ -46,25 +49,52 @@
 </template>
 
 <script>
-import { useContext } from '@nuxtjs/composition-api'
-import { defineComponent } from '@vue/composition-api'
-
+import {
+  defineComponent,
+  useContext,
+  ref,
+  useRouter,
+} from '@nuxtjs/composition-api'
 export default defineComponent({
   setup() {
-    const { $toast } = useContext()
+    const { $axios, store, $toast } = useContext()
+    const router = useRouter()
+
+    const info = ref({
+      username: '',
+      password: '',
+    })
+
+    function validateInput() {
+      if (info.value.username === '' || info.value.password === '') {
+        $toast.error('Please fill all the fields correctly.')
+        return false
+      }
+      return true
+    }
+
     function login() {
-      $toast.info('Complete Me!')
-      /***
-       * @todo Complete this function.
-       * @todo 1. Write code for form validation.
-       * @todo 2. Fetch the auth token from backend and login the user.
-       * @todo 3. Commit token to Vuex Store
-       * @hints checkout register/index.vue
-       */
+      if (!validateInput()) return
+
+      $toast.info('Please wait...')
+
+      $axios
+        .$post('auth/login/', {
+          username: info.value.username,
+          password: info.value.password,
+        })
+        .then((response) => {
+          store.commit('setToken', response.token)
+          router.push('/')
+        })
+        .catch((err) => {
+          $toast.error('Invalid credentians!..please give valid ones.')
+        })
     }
 
     return {
       login,
+      info,
     }
   },
 })

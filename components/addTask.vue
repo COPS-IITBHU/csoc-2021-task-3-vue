@@ -4,6 +4,7 @@
       <input
         type="text"
         name="add task"
+        v-model="newTaskTitle"
         class="
           todo-add-task-input
           px-4
@@ -47,14 +48,26 @@ import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
+  data(){
+    return{
+      newTaskTitle: '',
+    }
+  },
   methods: {
     addTask() {
-      /**
-       * @todo Complete this function.
-       * @todo 1. Send the request to add the task to the backend server.
-       * @todo 2. Add the task in the dom.
-       * @hint use emit to make a event that parent can observe
-       */
+      const data={
+        title: this.newTaskTitle,
+      }
+      const headers={
+        Authorization: 'Token ' + this.$store.getters.token
+      }
+      this.$axios.post('todo/create/',data,{headers})
+        .then((response) => {
+          this.$emit('newTask')
+        })
+        .catch((err) => {
+          this.$toast("Unable to add task!..")
+        })
     },
   },
 })

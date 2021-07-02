@@ -5,7 +5,7 @@
       <label for="inputFirstName">
         <input
           id="inputFirstName"
-          v-model.trim="firstName"
+          v-model="firstName"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputFirstName"
@@ -131,8 +131,8 @@ export default defineComponent({
 
       $axios
         .$post('auth/register/', data)
-        .then(({ token }) => {
-          store.commit('setToken', token)
+        .then((value) => {
+          store.commit('setToken', value.token)
           redirect('/')
         })
         .catch(() => {
