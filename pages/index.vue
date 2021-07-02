@@ -23,10 +23,10 @@
             <input
               :id="todo.id"
               type="text"
+              v-if="todo.editing"
               :class="[
                 ' appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
               ]"
-              v-if="todo.editing"
               v-model="newTitle"
               :name="todo.title"
               placeholder="Edit The Task"
@@ -34,6 +34,7 @@
           </label>
           <div class="">
             <button
+              v-if="todo.editing"
               class="
                 bg-transparent
                 hover:bg-gray-500
@@ -46,7 +47,6 @@
                 rounded
                 todo-update-task
               "
-              v-if="todo.editing"
               type="button"
               @click="updateTask(index, todo.id)"
             >
@@ -60,6 +60,7 @@
             <button
               style="margin-right: 5px"
               type="button"
+              v-if="!todo.editing"
               class="
                 bg-transparent
                 hover:bg-yellow-500
@@ -70,19 +71,19 @@
                 px-2
                 py-2
               "
-              v-if="!todo.editing"
               @click="editTask(index)"
             >
               <img
                 src="https://res.cloudinary.com/nishantwrp/image/upload/v1587486663/CSOC/edit.png"
+                v-if="!todo.editing"
                 width="18px"
                 height="20px"
-                v-if="!todo.editing"
                 alt="Edit"
               />
             </button>
             <button
               type="button"
+              v-if="!todo.editing"
               class="
                 bg-transparent
                 hover:bg-red-500
@@ -93,14 +94,13 @@
                 px-2
                 py-2
               "
-              v-if="!todo.editing"
               @click="deleteTask(index, todo.id)"
             >
               <img
                 src="https://res.cloudinary.com/nishantwrp/image/upload/v1587486661/CSOC/delete.svg"
+                v-if="!todo.editing"
                 width="18px"
                 height="22px"
-                v-if="!todo.editing"
                 alt="Delete"
               />
             </button>
@@ -112,12 +112,12 @@
 </template>
 
 <script lang>
-import { defineComponent, useContext, $toast } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 import addTask from '~/components/addTask.vue'
 
 export default defineComponent({
-  middleware: ['auth'],
   components: { addTask },
+  middleware: ['auth'],
   data() {
     return {
       hello: 'hello world!',
@@ -152,10 +152,9 @@ export default defineComponent({
               this.todos.push(element)
             }
           }
-          console.log(this.todos)
         })
         .catch((e) => {
-          console.log(e)
+          this.$toast.error(e)
         })
     },
     /**
@@ -174,12 +173,11 @@ export default defineComponent({
       const data = {
         title: this.newTitle,
       }
-      console.log(data)
       this.$axios.put(`/todo/${_id}/`, data, { headers }).then(() => {
         this.todos[_index].editing = !this.todos[_index].editing
         this.todos[_index].title = this.newTitle
         this.newTitle = ''
-        this.prev=-1;
+        this.prev = -1
       })
     },
     /**
@@ -189,13 +187,13 @@ export default defineComponent({
      * @hint read about class bindings in vue
      */
     editTask(index) {
-      this.$toast.info('Press Done to Save the Update before Proceeding!');
-      this.newTitle='';
-      if(this.prev!==-1){
+      this.$toast.info('Press Done to Save the Update before Proceeding!')
+      this.newTitle = ''
+      if (this.prev !== -1) {
         this.todos[this.prev].editing = !this.todos[this.prev].editing
       }
       this.todos[index].editing = !this.todos[index].editing
-      this.prev=index;
+      this.prev = index
     },
     /**
      * Function to delete a single todo
@@ -216,7 +214,7 @@ export default defineComponent({
           this.$toast.success('Task Deleted')
         })
         .catch((e) => {
-          console.log(e)
+          this.$toast.error(e)
         })
     },
   },

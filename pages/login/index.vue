@@ -16,8 +16,8 @@
       <label for="password">
         <input
           id="inputPassword"
-          type="password"
           v-model.trim="password"
+          type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
           placeholder="Password"
@@ -49,20 +49,24 @@
 </template>
 
 <script>
-import { defineComponent, reactive,toRefs, useContext } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  
   setup() {
     const { redirect, $axios, store, $toast } = useContext()
-    if(store.getters.auth){
-    redirect('/');
-  }
-    const state=reactive({
+    if (store.getters.auth) {
+      redirect('/')
+    }
+    const state = reactive({
       username: '',
       password: '',
     })
-    
+
     const validateField = () => {
       if (state.username === '' || state.password === '') {
         $toast.error('Please fill all the fields correctly.')
@@ -86,8 +90,7 @@ export default defineComponent({
       }
       $axios
         .post('auth/login/', data)
-        .then(({data}) => {
-          console.log(data);
+        .then(({ data }) => {
           store.commit('setToken', data.token)
           redirect('/')
         })

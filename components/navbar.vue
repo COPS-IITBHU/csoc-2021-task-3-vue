@@ -59,8 +59,8 @@
                   hover:bg-gray-400
                   pr-5
                 "
-                tabindex="-1"
                 id="menu-item-1"
+                tabindex="-1"
                 data-toggle="dropdown"
                 href="#"
                 @click="logout"
@@ -87,6 +87,16 @@ export default defineComponent({
   },
   computed: {
     auth() {
+      this.icon()
+      return this.$store.getters.auth
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.commit('setToken', null)
+      this.$router.replace('/login')
+    },
+    icon() {
       if (this.$store.getters.auth) {
         let firstName = ''
         let lastName = ''
@@ -107,17 +117,9 @@ export default defineComponent({
             this.name = firstName + ' ' + lastName
           })
           .catch((e) => {
-            console.log(e)
+            this.$toast.error(e)
           })
       }
-
-      return this.$store.getters.auth
-    },
-  },
-  methods: {
-    logout() {
-      this.$store.commit('setToken', null)
-      this.$router.replace('/login')
     },
   },
 })

@@ -39,5 +39,4 @@ export default defineComponent({
 .todo-task {
   max-width: 260px;
 }
-
 </style>
