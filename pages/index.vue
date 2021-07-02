@@ -155,21 +155,27 @@ export default defineComponent({
       //console.log(token)
       this.todos = [];
       let getTodos = [];
-      await this.$axios({
+      const response = await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/',
         method: 'get',
-      }).then(function({data, status}) { 
-        //console.log(data)
-        data.forEach(function(task){
+      })
+      // .then(function({data, status}) { 
+      //   console.log(data)
+      //   data.forEach(function(task){
+      //     task.editing = false;
+      //     getTodos.push(task);
+      //   })
+      // })
+      // this.todos = data
+      console.log(response.data)
+      response.data.forEach(function(task){
           task.editing = false;
           getTodos.push(task);
         })
-      })
-      this.todos = getTodos
-
+        this.todos = getTodos;
       //console.log(this.todos)
       this.loading = false
 
@@ -182,7 +188,7 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    async updateTask(_index, _id) {
+    /*async */updateTask(_index, _id) {
 
       let newTitle = this.todos[_index].title;
       let token = this.$store.getters.token;
@@ -190,7 +196,7 @@ export default defineComponent({
       let all = this;
 
       if(newTitle!= '') {
-          await this.$axios({
+          /*await*/ this.$axios({
             url: 'https://todo-app-csoc.herokuapp.com/' + "todo/" + _id + "/",
             headers: {
                 Authorization: "Token " + token,
@@ -218,7 +224,7 @@ export default defineComponent({
       }).then(function({data, status}) { 
         //console.log(data)
         all.todos[_index].title = data.title;
-      })
+      });
       }
 
       this.todos[_index].editing = !this.todos[_index].editing;
@@ -241,16 +247,17 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    async deleteTask(_index, _id) {
+    /*async*/ deleteTask(_index, _id) {
       let token = this.$store.getters.token;
       let all = this;
-      await this.$axios({
+      const data = /*await*/ this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/' +_id +'/',
         method: 'delete',
-      }).then(function({data, status}) {
+      })
+      .then(function({data, status}) {
         //all.getTasks();
         all.todos = all.todos.filter(item => item.id !== _id)
         //console.log(all.todos)
@@ -259,6 +266,14 @@ export default defineComponent({
       //console.log(err);
       all.$toast.error("something went wrong");
     })
+
+
+    // console.log(data);
+    // if(data.status == 204) {
+    //   this.todos = this.todos.filter(item => item.id != _id);
+    // } else {
+    //   this.$toast.error("something went wrong");
+    // }
     },
   },
 })
