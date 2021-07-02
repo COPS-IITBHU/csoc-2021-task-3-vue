@@ -5,6 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
+          v-model.trim="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -15,6 +16,7 @@
       <label for="password">
         <input
           id="inputPassword"
+          v-model.trim="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -31,7 +33,8 @@
           rounded
           bg-transparent
           text-green-500
-          hover:text-white hover:bg-green-500
+          hover:text-white
+          hover:bg-green-500
           border border-green-500
           hover:border-transparent
           focus:outline-none
@@ -46,12 +49,31 @@
 </template>
 
 <script>
-import { useContext } from '@nuxtjs/composition-api'
-import { defineComponent } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const { $toast } = useContext()
+    const { redirect, $axios, store, $toast } = useContext()
+    if (store.getters.auth) {
+      redirect('/')
+    }
+    const state = reactive({
+      username: '',
+      password: '',
+    })
+
+    const validateField = () => {
+      if (state.username === '' || state.password === '') {
+        $toast.error('Please fill all the fields correctly.')
+        return false
+      }
+      return true
+    }
     function login() {
       $toast.info('Complete Me!')
       /***
@@ -61,9 +83,24 @@ export default defineComponent({
        * @todo 3. Commit token to Vuex Store
        * @hints checkout register/index.vue
        */
+      if (!validateField()) return
+      const data = {
+        username: state.username,
+        password: state.password,
+      }
+      $axios
+        .post('auth/login/', data)
+        .then(({ data }) => {
+          store.commit('setToken', data.token)
+          redirect('/')
+        })
+        .catch(() => {
+          $toast.error('INVALID CREDENTIALS')
+        })
     }
 
     return {
+      ...toRefs(state),
       login,
     }
   },

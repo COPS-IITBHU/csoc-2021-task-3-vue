@@ -27,7 +27,7 @@ export default defineComponent({
 .todo-add-task-input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  max-width: 300px;
+  max-width: 400px;
 }
 
 .todo-update-task,
