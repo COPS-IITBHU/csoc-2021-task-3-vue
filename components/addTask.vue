@@ -62,10 +62,11 @@ export default defineComponent({
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
+      let taskTitle = this.title.trim();
+      this.title = '';
       let token = this.$store.getters.token;
-      let all = this;
       //console.log(this.title)
-      if(this.title.trim() != '') {
+      if(taskTitle != '') {
         const data = 
         await this.$axios({
         headers: {
@@ -74,7 +75,7 @@ export default defineComponent({
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/create/',
         method: 'post',
         data: {
-          title: this.title
+          title: taskTitle
         }
       });
       // .then(function({data, status}) { 
@@ -84,16 +85,13 @@ export default defineComponent({
       // this.title = '';
       // this.$emit('newTask')
       // }
-      console.log(data)
+      // console.log(data)
       if(data.status == 200) {
         this.$emit('newTask');
         this.$toast.success("done");
       } else {
         this.$toast.error("something went wromg");
       }
-
-      this.title = '';
-
       }
 
     },

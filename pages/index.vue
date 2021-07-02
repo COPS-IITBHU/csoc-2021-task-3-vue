@@ -170,7 +170,7 @@ export default defineComponent({
       //   })
       // })
       // this.todos = data
-      console.log(response.data)
+      // console.log(response.data)
       response.data.forEach(function(task){
           task.editing = false;
           getTodos.push(task);
