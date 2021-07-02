@@ -1,7 +1,7 @@
 <template>
   <main class="max-w-lg mx-auto px-6">
     <add-task @newTask="getTasks" />
-    <transition>
+    <transition name="slide-fade">
       <span v-if="loading">Fetching Tasks....</span>
       <ul v-else class="flex-col mt-9 mx-auto">
         <li
@@ -17,6 +17,7 @@
             justify-between
             items-center
             mb-2
+            font-semibold
           "
         >
           <label :for="todo.id">
@@ -63,8 +64,8 @@
               type="button"
               class="
                 bg-transparent
-                hover:bg-yellow-500 hover:text-white
-                border border-yellow-500
+                hover:bg-blue-500 hover:text-white
+                border border-blue-500
                 hover:border-transparent
                 rounded
                 px-2

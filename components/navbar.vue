@@ -78,7 +78,7 @@ export default defineComponent({
         url: 'https://todo-app-csoc.herokuapp.com/' + 'auth/profile/',
         method: 'get',
       })
-      t=JSON.parse(JSON.stringify(detail.data));
+      t=JSON.parse(JSON.stringify(detail.data))
     this.name = t.name;
     this.username = t.username;
     this.email = t.email;

@@ -80,6 +80,7 @@ export default defineComponent({
         //console.log(title.status);
         this.$emit('newTask');
         this.$toast.success("Task added");
+        this.title='';
       } else {
         this.$toast.error("something went wrong");
       }
