@@ -119,16 +119,6 @@ export default defineComponent({
     return {
       hello: 'hello world!',
       todos: [
-        {
-          title: 'Naruto',
-          id: 1,
-          editing: false,
-        },
-        {
-          title: 'Sasuke',
-          id: 2,
-          editing: false,
-        },
       ],
       loading: false,
     }
@@ -149,17 +139,17 @@ export default defineComponent({
       //console.log(token)
       this.todos = [];
       let gtTodos = [];
+      const tsk=
       await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/',
         method: 'get',
-      }).then(function({data, status}) {
-        data.forEach(function(task){
-          task.editing = false;
+      })
+      tsk.data.forEach(function(task){
+        task.editing = false;
           gtTodos.push(task);
-        })
       })
       this.todos = gtTodos
       this.loading = false
@@ -173,13 +163,13 @@ export default defineComponent({
      * @todo 1. Send the request to update the task to the backend server.
      * @todo 2. Update the task in the dom.
      */
-    async updateTask(_index, _id) {
+     updateTask(_index, _id) {
       let newTitle = this.todos[_index].title;
       let token = this.$store.getters.token;
       let a = this;
       console.log("update");
       if(newTitle!= '') {
-          await this.$axios({
+          this.$axios({
             url: 'https://todo-app-csoc.herokuapp.com/' + "todo/" + _id + "/",
             headers: {
                 Authorization: "Token " + token,
@@ -190,12 +180,12 @@ export default defineComponent({
                 title: newTitle,
             }
         }).then(function({data, status}) {
-            a.$toast.success("done");
+            a.$toast.success("Task Updated Sucessfully");
         }).catch(function(err) {
             a.$toast.error("something went wrong");
         })
       } else {
-        this.$toast.error("empty field");
+        this.$toast.error("Enter the updated title");
         this.$axios({
         headers: {
             Authorization: 'Token ' + token,
@@ -226,9 +216,9 @@ export default defineComponent({
      * @todo 1. Send the request to delete the task to the backend server.
      * @todo 2. Remove the task from the dom.
      */
-    async deleteTask(_index, _id) {let token = this.$store.getters.token;
+    deleteTask(_index, _id) {let token = this.$store.getters.token;
       let a = this;
-      await this.$axios({
+      this.$axios({
         headers: {
             Authorization: 'Token ' + token,
         },
@@ -236,7 +226,7 @@ export default defineComponent({
         method: 'delete',
       }).then(function({data, status}) {
         a.todos = a.todos.filter(item => item.id !== _id)
-        a.$toast.success("done");
+        a.$toast.success("Task Deleted Sucessfully");
     }).catch(function(err) {
       console.log(err);
       a.$toast.error("something went wrong");

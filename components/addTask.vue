@@ -65,6 +65,7 @@ export default defineComponent({
       let token = this.$store.getters.token;
       let a = this;
       if(this.title.trim() != '') {
+        const title=
         await this.$axios({
         headers: {
             Authorization: 'Token ' + token,
@@ -72,13 +73,16 @@ export default defineComponent({
         url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/create/',
         method: 'post',
         data: {
-          title: this.title
+          title: this.title.trim()
         }
-      }).then(function({data, status}) {
-        a.$toast.success("done");
-      })
-      this.title = '';
-      this.$emit('newTask')
+      });if(title.status == 200) {
+       // console.log(title);
+        //console.log(title.status);
+        this.$emit('newTask');
+        this.$toast.success("Task added");
+      } else {
+        this.$toast.error("something went wrong");
+      }
       }
     },
   },
