@@ -5,7 +5,7 @@
       <label for="inputFirstName">
         <input
           id="inputFirstName"
-          v-model.trim="firstName"
+          v-model="firstName"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputFirstName"
@@ -88,7 +88,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup() {
+  setup({app}) {
     const state = reactive({
       firstName: '',
       lastName: '',
@@ -131,8 +131,9 @@ export default defineComponent({
 
       $axios
         .$post('auth/register/', data)
-        .then(({ token }) => {
-          store.commit('setToken', token)
+        .then((response) => {
+          store.commit('setToken', response.token)
+          app.$cookies.set('token',response.token)
           redirect('/')
         })
         .catch(() => {
