@@ -2,6 +2,7 @@
   <aside class="mx-auto flex justify-between mt-24 px-4">
     <label for="add task" class="flex-1">
       <input
+        v-model="title"
         type="text"
         name="add task"
         class="
@@ -43,10 +44,23 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
+
+  setup() {
+    const state = reactive({
+      title : '',
+    })
+
+  const { redirect, $axios, store, $toast } = useContext()
+
   methods: {
     addTask() {
       /**
@@ -55,7 +69,34 @@ export default defineComponent({
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
+
+      if(!state.title) return;
+
+      const data = {
+        title : title,
+      }
+
+
+      const headers = {
+  Authorization: 'Token ' + this.$store.getters.token,
+}
+
+      $axios
+        .$post('todo/create/', data, {headers})
+        .then(({ data }) => {
+          context.emit('newTask')
+          state.title = ''
+        })
+        .catch(() => {
+          $toast.error(
+            'Wrong Login Credentials'
+          )
+        })
     },
+
+    return {
+      addTask,
+      ...toRefs(state),
   },
 })
 </script>
