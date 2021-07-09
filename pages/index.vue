@@ -179,13 +179,22 @@ export default defineComponent({
      * @todo 2. Remove the task from the dom.
      */
     deleteTask(_index, _id) {
-      const headers = {
-        Authorization: 'Token ' + this.$store.getters.token,
-      }
-      this.$axios.delete(`/todo/${_id}/`, { headers }).then(() => {
-        this.todos.splice(_index, 1)
+      // const headers = {
+      //   Authorization: 'Token ' + this.$store.getters.token,
+      // }
+       this.$axios({
+        url: "todo/"+_id+"/",
+        headers: {
+           Authorization: 'Token ' + this.$store.getters.token,
+        },
+        method: "delete",
+    }).then(() => {
+       this.todos=this.todos.filter((todo) => todo.id !== _id)
+        // this.todos.splice(_index, 1)
         this.$toast.success('Task Delete Successfully')
-      })
+      }).catch(function (err) {
+          this.$toast.error('Something went wrong')
+        })
     },
   },
 })

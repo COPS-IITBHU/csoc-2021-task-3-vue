@@ -12,4 +12,6 @@ export default defineNuxtMiddleware((context) => {
   {
    return context.redirect('/login/');
   }
+ 
+
 })

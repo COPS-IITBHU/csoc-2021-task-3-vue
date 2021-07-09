@@ -56,55 +56,67 @@
 <script>
 import {
   defineComponent,
-  reactive,
-  toRefs,
-  useContext,
+
+
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
+  
+   data() {
+    return {
+      addtitle: ''
+    }
+  },
 
-  setup(props, context) {
-    const state = reactive({
-      addtitle: '',
-    })
-    const { $axios, store, $toast } = useContext()
-
-    function addTask() {
+  methods: {
+    addTask() {
+     
       /**
        * @todo Complete this function.
        * @todo 1. Send the request to add the task to the backend server.
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
-
-      // console.log(state.addtitle);
-      if (!state.addtitle) {
-        return
-      }
-      const headers = {
-        Authorization: 'Token ' + store.getters.token,
-      }
-      const data = {
-        title: state.addtitle,
-      }
-      $axios
-        .post('todo/create/', data, { headers })
-
-        .then(function () {
-          context.emit('newTask'),
-            (state.addtitle = ''),
-            $toast.success('Task Added Successfully')
-        })
-        .catch(function (err) {
-          $toast.error('Something went wrong, try again')
-        })
+      
+        // console.log(state.addtitle);
+    if (!this.addtitle) {
+        return;
     }
-    return {
-      addTask,
-      ...toRefs(state),
-    }
+    
+   
+    
+    this.$axios({
+        
+        headers: {
+           Authorization: 'Token ' + this.$store.getters.token,
+        },
+
+        method: 'post',
+        url:  'todo/create/',
+      
+        data: {
+         title: this.addtitle,
+        }
+    })
+       
+        .then( ()=> {
+           
+           this.$emit('newTask');
+           
+           this.addtitle='';
+             this.$toast.success('Task Added Successfully')
+
+
+        })
+        // .catch(function (err) {
+        //      this.$toast.error(
+        //     'Something went wrong, try again'
+        //   )
+        // });
   },
+  },
+
 })
 </script>
 
