@@ -57,19 +57,23 @@
       </label>
 
       <button
+      id="rgsbtn"
         type="submit"
-        class="
+       class="
           w-full
           text-center
           py-3
           rounded
-          bg-transparent
+          bg-green-300
+          hover:bg-green-400
           text-green-500
-          hover:text-white hover:bg-green-500
+          hover:text-white
+          hover:bg-green-500
           border border-green-500
           hover:border-transparent
           focus:outline-none
           my-1
+          ...
         "
         @click="register"
       >
@@ -87,7 +91,9 @@ import {
   useContext,
 } from '@nuxtjs/composition-api'
 
+
 export default defineComponent({
+ 
   setup() {
     const state = reactive({
       firstName: '',
@@ -98,6 +104,11 @@ export default defineComponent({
     })
 
     const { redirect, $axios, store, $toast } = useContext()
+
+     if(store.getters.auth)
+  {
+    redirect('/');
+  }
 
     const validateField = () => {
       if (
@@ -149,3 +160,4 @@ export default defineComponent({
   },
 })
 </script>
+

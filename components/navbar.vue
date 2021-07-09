@@ -22,6 +22,7 @@
       <div v-if="auth" class="w-28 inline-block relative">
         <div class="group inline-block relative">
           <a
+            id="div1"
             class="
               rounded-b
               bg-gray-200
@@ -30,6 +31,7 @@
               block
               whitespace-no-wrap
               hover:bg-gray-400
+              text-white
             "
             href="#"
             @click="logout"
@@ -43,7 +45,8 @@
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import {defineComponent } from '@nuxtjs/composition-api'
+
 
 export default defineComponent({
   computed: {
@@ -54,8 +57,11 @@ export default defineComponent({
   methods: {
     logout() {
       this.$store.commit('setToken', null)
-      this.$router.replace('/login')
+      this.$router.push('/login/')
+      // redirect('/login/')
+      //  this.$router.replace('/login/')
     },
   },
 })
 </script>
+

@@ -5,6 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
+          v-model.trim="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -15,6 +16,7 @@
       <label for="password">
         <input
           id="inputPassword"
+          v-model.trim="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -23,20 +25,9 @@
       </label>
 
       <button
+        id="loginbtn"
         type="submit"
-        class="
-          w-full
-          text-center
-          py-3
-          rounded
-          bg-transparent
-          text-green-500
-          hover:text-white hover:bg-green-500
-          border border-green-500
-          hover:border-transparent
-          focus:outline-none
-          my-1
-        "
+        class="w-full text-center py-3 rounded bg-green-300 hover:bg-green-400 text-green-500 hover:text-white hover:bg-green-500 border border-green-500 hover:border-transparent focus:outline-none my-1 ... "
         @click="login"
       >
         Login
@@ -46,26 +37,74 @@
 </template>
 
 <script>
-import { useContext } from '@nuxtjs/composition-api'
-import { defineComponent } from '@vue/composition-api'
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  useContext,
+} from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const { $toast } = useContext()
+    const state = reactive({
+      // firstName: '',
+      // lastName: '',
+      // email: '',
+      username: '',
+      password: '',
+    })
+
+    const { redirect, $axios, store, $toast } = useContext()
+    if (store.getters.auth) {
+      redirect('/')
+    }
+
+    const validateField = () => {
+      if (
+        // state.firstName === '' ||
+        // state.lastName === '' ||
+        // state.email === '' ||
+        state.username === '' ||
+        state.password === ''
+      ) {
+        $toast.error('Please fill all the fields correctly.')
+        return false
+      }
+      // if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(state.email)) {
+      //   $toast.error('Please enter a valid email address.')
+      //   return false
+      // }
+      return true
+    }
+
     function login() {
-      $toast.info('Complete Me!')
-      /***
-       * @todo Complete this function.
-       * @todo 1. Write code for form validation.
-       * @todo 2. Fetch the auth token from backend and login the user.
-       * @todo 3. Commit token to Vuex Store
-       * @hints checkout register/index.vue
-       */
+      if (!validateField()) return
+
+      const data = {
+        // name: `${state.firstName} ${state.lastName}`,
+        // email: state.email,
+        username: state.username,
+        password: state.password,
+      }
+
+      $toast.info('Please wait...')
+
+      $axios
+        .$post('auth/login/', data)
+        .then(({ token }) => {
+          store.commit('setToken', token)
+          redirect('/')
+        })
+        .catch(() => {
+          $toast.error('Unregistered Username and Password')
+        })
     }
 
     return {
+      ...toRefs(state),
       login,
     }
   },
 })
 </script>
+
