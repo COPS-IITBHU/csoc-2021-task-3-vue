@@ -117,7 +117,7 @@ export default defineComponent({
       return true
     }
 
-    function register() {
+    /*async */function register() {
       if (!validateField()) return
 
       const data = {
@@ -129,7 +129,7 @@ export default defineComponent({
 
       $toast.info('Please wait...')
 
-      $axios
+      /*await */$axios
         .$post('auth/register/', data)
         .then(({ token }) => {
           store.commit('setToken', token)

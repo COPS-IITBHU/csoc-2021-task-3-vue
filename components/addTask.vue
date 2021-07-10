@@ -4,6 +4,8 @@
       <input
         type="text"
         name="add task"
+        id="inputTitle"
+        v-model.trim ="title"
         class="
           todo-add-task-input
           px-4
@@ -47,14 +49,59 @@ import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   emits: ['newTask'],
+  data() {
+    return {
+      title: ''
+    }
+  },
   methods: {
-    addTask() {
+    async addTask() {
       /**
        * @todo Complete this function.
        * @todo 1. Send the request to add the task to the backend server.
        * @todo 2. Add the task in the dom.
        * @hint use emit to make a event that parent can observe
        */
+      let taskTitle = this.title.trim();
+      this.title = '';
+      let token = this.$store.getters.token;
+      //console.log(this.title)
+      if(taskTitle != '') {
+      try {
+        const data = 
+        await this.$axios({
+        headers: {
+            Authorization: 'Token ' + token,
+        },
+        url: 'https://todo-app-csoc.herokuapp.com/' + 'todo/create/',
+        method: 'post',
+        data: {
+          title: taskTitle
+        }
+      })
+
+      this.$emit('newTask');
+      this.$toast.success("done");
+
+      } catch (error) {
+        this.$toast.error("something went wromg");
+      }
+      // .then(function({data, status}) { 
+      //   //console.log(data);
+      //   all.$toast.success("done");
+      // })
+      // this.title = '';
+      // this.$emit('newTask')
+      // }
+      // console.log(data)
+      // if(data.status == 200) {
+      //   this.$emit('newTask');
+      //   this.$toast.success("done");
+      // } else {
+      //   this.$toast.error("something went wromg");
+      // }
+      }
+
     },
   },
 })
