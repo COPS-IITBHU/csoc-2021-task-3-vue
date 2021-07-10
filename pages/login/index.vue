@@ -5,7 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
-          v-model="username"
+          v-model.trim ="username"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -16,7 +16,7 @@
       <label for="password">
         <input
           id="inputPassword"
-          v-model="password"
+          v-model.trim ="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -61,7 +61,7 @@ export default defineComponent({
   },
   setup() {
     const { $toast,$axios,store,redirect} = useContext()
-    async function login() {
+    /*async */function login() {
       $toast.info('loading')
       /***
        * @todo Complete this function.
@@ -83,7 +83,7 @@ export default defineComponent({
 
       console.log(state)
 
-      await $axios
+      /*await */$axios
         .$post('auth/login/', dataForApi)
         .then(({ token }) => {
           store.commit('setToken', token);

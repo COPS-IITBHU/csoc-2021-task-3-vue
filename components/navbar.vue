@@ -10,7 +10,7 @@
             <nuxt-link to="/">Tasks</nuxt-link>
           </li>
           <li>
-            <img :src="'https://ui-avatars.com/api/?name=' + name + '&background=330066&size=33&color=fff'" class="rounded-circle" :id="avatar-image"><span class="todo-profile-name" id="profile-name" >{{name}}</span>
+            <img :src="'https://ui-avatars.com/api/?name=' + name + '&background=330066&size=33&color=fff'" class="rounded-circle"><span class="todo-profile-name" id="profile-name" >{{name}}</span>
           </li>
         </ul>
         <ul v-else class="flex">

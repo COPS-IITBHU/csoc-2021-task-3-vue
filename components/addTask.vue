@@ -5,7 +5,7 @@
         type="text"
         name="add task"
         id="inputTitle"
-        v-model="title"
+        v-model.trim ="title"
         class="
           todo-add-task-input
           px-4
@@ -67,6 +67,7 @@ export default defineComponent({
       let token = this.$store.getters.token;
       //console.log(this.title)
       if(taskTitle != '') {
+      try {
         const data = 
         await this.$axios({
         headers: {
@@ -77,7 +78,14 @@ export default defineComponent({
         data: {
           title: taskTitle
         }
-      });
+      })
+
+      this.$emit('newTask');
+      this.$toast.success("done");
+
+      } catch (error) {
+        this.$toast.error("something went wromg");
+      }
       // .then(function({data, status}) { 
       //   //console.log(data);
       //   all.$toast.success("done");
@@ -86,12 +94,12 @@ export default defineComponent({
       // this.$emit('newTask')
       // }
       // console.log(data)
-      if(data.status == 200) {
-        this.$emit('newTask');
-        this.$toast.success("done");
-      } else {
-        this.$toast.error("something went wromg");
-      }
+      // if(data.status == 200) {
+      //   this.$emit('newTask');
+      //   this.$toast.success("done");
+      // } else {
+      //   this.$toast.error("something went wromg");
+      // }
       }
 
     },

@@ -24,7 +24,7 @@
               :id="todo.id"
               type="text"
               v-if="todo.editing"
-              v-model="todo.title"
+              v-model.trim ="todo.title"
               :class="[
                 'appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring todo-edit-task-input',
               ]"
@@ -153,7 +153,6 @@ export default defineComponent({
        */
       let token = this.$store.getters.token;
       //console.log(token)
-      this.todos = [];
       let getTodos = [];
       const response = await this.$axios({
         headers: {
@@ -175,6 +174,7 @@ export default defineComponent({
           task.editing = false;
           getTodos.push(task);
         })
+        this.todos = [];
         this.todos = getTodos;
       //console.log(this.todos)
       this.loading = false
