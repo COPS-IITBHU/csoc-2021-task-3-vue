@@ -5,6 +5,7 @@
       <label for="inputUsername">
         <input
           id="inputUsername"
+          v-model="inputUsername"
           type="text"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputUsername"
@@ -15,6 +16,7 @@
       <label for="password">
         <input
           id="inputPassword"
+          v-model="password"
           type="password"
           class="block border border-grey-light w-full p-3 rounded mb-4"
           name="inputPassword"
@@ -47,13 +49,27 @@
 
 <script>
 import { useContext } from '@nuxtjs/composition-api'
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, reactive, toRefs } from '@vue/composition-api'
 
 export default defineComponent({
+  middleware: 'auth',
   setup() {
-    const { $toast } = useContext()
+    const state = reactive({
+      inputUsername: '',
+      password: '',
+    })
+
+    const { redirect, $axios, store, $toast } = useContext()
+
+    const validateField = () => {
+      if( state.inputUsername ==='' || state.password ==='' ){
+        $toast.error('Please fill all the fields correctly.')
+        return false
+      }
+      return true
+    }
+
     function login() {
-      $toast.info('Complete Me!')
       /***
        * @todo Complete this function.
        * @todo 1. Write code for form validation.
@@ -61,9 +77,25 @@ export default defineComponent({
        * @todo 3. Commit token to Vuex Store
        * @hints checkout register/index.vue
        */
+      // console.log(,);
+      if (!validateField()) return;
+      const data = {
+        username: state.inputUsername,
+        password: state.password
+      }
+      $toast.info('Please wait...')
+      $axios
+        .$post('auth/login/', data)
+        .then( ({ token }) => {
+          store.commit('setToken', token)
+          redirect('/')
+          $toast.success('Login Authenticated.')
+        })
+        .catch(err => $toast.error('Invalid Credentials'))
     }
 
     return {
+      ...toRefs(state),
       login,
     }
   },
